@@ -310,10 +310,10 @@
   </div>
 
   <nav class="tab-nav" role="tablist" aria-label="Dashboard sections" id="tabNav">
-    <button class="tab-btn" role="tab" data-tab="home" aria-selected="true" aria-controls="panel-home" id="tab-home">Home</button>
+    <button class="tab-btn" role="tab" data-tab="home" aria-selected="false" aria-controls="panel-home" id="tab-home">Home</button>
+    <button class="tab-btn" role="tab" data-tab="history" aria-selected="true" aria-controls="panel-history" id="tab-history">Clan History</button>
     <button class="tab-btn" role="tab" data-tab="members" aria-selected="false" aria-controls="panel-members" id="tab-members">Members</button>
     <button class="tab-btn" role="tab" data-tab="war" aria-selected="false" aria-controls="panel-war" id="tab-war">War</button>
-    <button class="tab-btn" role="tab" data-tab="history" aria-selected="false" aria-controls="panel-history" id="tab-history">Clan History</button>
     <button class="tab-btn" role="tab" data-tab="capital" aria-selected="false" aria-controls="panel-capital" id="tab-capital">Capital</button>
     <!-- CWL tab hidden for now. Restore this button to re-enable the CWL tab. -->
     <!--
@@ -321,8 +321,17 @@
     -->
   </nav>
 
+  <!-- CLAN HISTORY -->
+  <div class="tab-panel active" id="panel-history" role="tabpanel" aria-labelledby="tab-history">
+    <section>
+      <h2>Clan History</h2>
+      <div class="timeline" id="historyTimeline"></div>
+      <div class="empty-state" id="historyEmpty" style="display:none;">No history recorded yet.</div>
+    </section>
+  </div>
+
   <!-- HOME -->
-  <div class="tab-panel active" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
+  <div class="tab-panel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
     <section>
       <h2>About the Clan</h2>
       <p><strong>Clan creation date:</strong> Friday, 7 August 2026</p>
@@ -395,38 +404,6 @@
     </section>
   </div>
 
-  <!-- CLAN HISTORY -->
-  <div class="tab-panel" id="panel-history" role="tabpanel" aria-labelledby="tab-history">
-    <section>
-      <h2>Clan History</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-date">7 August 2026</div>
-          <div class="timeline-title">Clan created</div>
-          <div class="timeline-desc">United was founded by Boss_Hoss and Tito.</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-date">13 August 2026</div>
-          <div class="timeline-title">Promoted to Clan Level 2</div>
-          <div class="timeline-desc">United reached Clan Level 2, and Clan Capital was unlocked with the promotion.</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-date">14 August 2026</div>
-          <div class="timeline-title">Clan Capital reached Level 2</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-date">14 August 2026</div>
-          <div class="timeline-title">Clan Capital reached Level 3</div>
-          <div class="timeline-desc">Wizard Valley was unlocked.</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-date">17 August 2026</div>
-          <div class="timeline-title">Clan Capital promoted to Bronze III</div>
-        </div>
-      </div>
-    </section>
-  </div>
-
   <!-- CAPITAL -->
   <div class="tab-panel" id="panel-capital" role="tabpanel" aria-labelledby="tab-capital">
     <section>
@@ -490,7 +467,7 @@ const WAR_LABELS = {
 
 // "cwl" intentionally excluded while the CWL tab/panel are commented out above.
 // Restore "cwl" to this list when re-enabling the CWL tab button and panel.
-const VALID_TABS = ["home", "members", "war", "history", "capital"];
+const VALID_TABS = ["history", "home", "members", "war", "capital"];
 
 function roleClass(role) {
   if (!role) return "";
@@ -516,6 +493,13 @@ function timeAgo(iso) {
   if (hrs < 24) return `${hrs} hr${hrs > 1 ? "s" : ""} ago`;
   const days = Math.floor(hrs / 24);
   return `${days} day${days > 1 ? "s" : ""} ago`;
+}
+
+function formatHistoryDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
 
 /* ---------- Tab navigation ---------- */
@@ -580,7 +564,7 @@ async function loadDashboard() {
 }
 
 function render(data) {
-  const { clan, members, war, attacks, updated_at } = data;
+  const { clan, members, war, attacks, updated_at, history: historyEvents } = data;
 
   if (clan) {
     document.getElementById("clanName").textContent = clan.name || "United";
@@ -672,6 +656,25 @@ function render(data) {
     });
   } else {
     membersEmpty.style.display = "block";
+  }
+
+  const historyTimeline = document.getElementById("historyTimeline");
+  const historyEmpty = document.getElementById("historyEmpty");
+  historyTimeline.innerHTML = "";
+  if (historyEvents && historyEvents.length) {
+    historyEmpty.style.display = "none";
+    historyEvents.forEach(ev => {
+      const item = document.createElement("div");
+      item.className = "timeline-item";
+      item.innerHTML = `
+        <div class="timeline-date">${formatHistoryDate(ev.event_time)}</div>
+        <div class="timeline-title">${ev.title || "—"}</div>
+        ${ev.description ? `<div class="timeline-desc">${ev.description}</div>` : ""}
+      `;
+      historyTimeline.appendChild(item);
+    });
+  } else {
+    historyEmpty.style.display = "block";
   }
 }
 
