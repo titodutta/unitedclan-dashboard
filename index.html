@@ -545,8 +545,14 @@ function initTabs() {
     activateTab(tabName, false);
   });
 
-  const initialTab = window.location.hash.replace("#", "") || "home";
-  activateTab(initialTab, false);
+const hash = window.location.hash.replace("#", "");
+
+if (hash && VALID_TABS.includes(hash)) {
+  activateTab(hash, false);
+} else {
+  activateTab("home", false);
+  history.replaceState(null, "", window.location.pathname + window.location.search);
+}
 }
 
 /* ---------- Data fetching (unchanged behaviour) ---------- */
