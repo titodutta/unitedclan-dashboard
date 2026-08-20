@@ -126,10 +126,7 @@
     font-size: 15px; text-transform: uppercase; letter-spacing: 0.6px;
     color: var(--text-dim); margin: 0 0 16px;
   }
-  section h3 {
-    font-size: 13.5px; letter-spacing: 0.3px;
-    color: var(--accent-2); margin: 18px 0 8px;
-  }
+  section h2:not(:first-child) { margin-top: 22px; }
   section p {
     font-size: 14px; line-height: 1.65; color: var(--text);
     margin: 0 0 12px;
@@ -191,6 +188,90 @@
     font-size: 14px; max-width: 420px; margin: 0 auto; color: var(--text-dim);
   }
 
+  /* Timeline (Clan History) */
+  .timeline {
+    position: relative;
+    margin: 10px 0 0;
+    padding-left: 28px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-item {
+    position: relative;
+    padding-bottom: 22px;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+  .timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -28px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--panel);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .timeline-date {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--accent-2);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 4px;
+  }
+  .timeline-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .timeline-desc {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  /* Capital milestone cards */
+  .milestone-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .milestone-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .milestone-card .m-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px;
+    color: var(--text-dim); margin-bottom: 6px;
+  }
+  .milestone-card .m-value {
+    font-size: 15px; font-weight: 700; color: var(--accent-2);
+  }
+  .milestone-card .m-date {
+    font-size: 12px; color: var(--text-dim); margin-top: 4px;
+  }
+  .milestone-card.league .m-value { color: var(--accent); }
+  .future-note {
+    margin-top: 16px;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    border-top: 1px dashed var(--border);
+    padding-top: 12px;
+  }
+
   footer { text-align: center; color: var(--text-dim); font-size: 12px; margin-top: 30px; }
 
   @media (max-width: 640px) {
@@ -200,6 +281,7 @@
     th, td { padding: 7px 6px; font-size: 12.5px; }
     .tab-btn { padding: 8px 14px; font-size: 12.5px; }
     section { padding: 16px; }
+    .milestone-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
 <link rel="icon" type="image/png" href="/favicon.png">
@@ -231,9 +313,12 @@
     <button class="tab-btn" role="tab" data-tab="home" aria-selected="true" aria-controls="panel-home" id="tab-home">Home</button>
     <button class="tab-btn" role="tab" data-tab="members" aria-selected="false" aria-controls="panel-members" id="tab-members">Members</button>
     <button class="tab-btn" role="tab" data-tab="war" aria-selected="false" aria-controls="panel-war" id="tab-war">War</button>
-    <button class="tab-btn" role="tab" data-tab="history" aria-selected="false" aria-controls="panel-history" id="tab-history">History</button>
+    <button class="tab-btn" role="tab" data-tab="history" aria-selected="false" aria-controls="panel-history" id="tab-history">Clan History</button>
     <button class="tab-btn" role="tab" data-tab="capital" aria-selected="false" aria-controls="panel-capital" id="tab-capital">Capital</button>
+    <!-- CWL tab hidden for now. Restore this button to re-enable the CWL tab. -->
+    <!--
     <button class="tab-btn" role="tab" data-tab="cwl" aria-selected="false" aria-controls="panel-cwl" id="tab-cwl">CWL</button>
+    -->
   </nav>
 
   <!-- HOME -->
@@ -310,13 +395,34 @@
     </section>
   </div>
 
-  <!-- HISTORY -->
+  <!-- CLAN HISTORY -->
   <div class="tab-panel" id="panel-history" role="tabpanel" aria-labelledby="tab-history">
     <section>
       <h2>Clan History</h2>
-      <div class="placeholder-panel">
-        <div class="icon">📜</div>
-        <p>Clan history will be recorded here as United grows.</p>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">7 August 2026</div>
+          <div class="timeline-title">Clan created</div>
+          <div class="timeline-desc">United was founded by Boss_Hoss and Tito.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">13 August 2026</div>
+          <div class="timeline-title">Promoted to Clan Level 2</div>
+          <div class="timeline-desc">United reached Clan Level 2, and Clan Capital was unlocked with the promotion.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">14 August 2026</div>
+          <div class="timeline-title">Clan Capital reached Level 2</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">14 August 2026</div>
+          <div class="timeline-title">Clan Capital reached Level 3</div>
+          <div class="timeline-desc">Wizard Valley was unlocked.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">17 August 2026</div>
+          <div class="timeline-title">Clan Capital promoted to Bronze III</div>
+        </div>
       </div>
     </section>
   </div>
@@ -325,14 +431,39 @@
   <div class="tab-panel" id="panel-capital" role="tabpanel" aria-labelledby="tab-capital">
     <section>
       <h2>Clan Capital</h2>
-      <div class="placeholder-panel">
-        <div class="icon">🏰</div>
-        <p>Capital statistics and Raid Weekend history will appear here when Capital data is added to the API.</p>
+      <div class="milestone-grid">
+        <div class="milestone-card">
+          <div class="m-label">Capital unlocked</div>
+          <div class="m-value">Unlocked</div>
+          <div class="m-date">13 August 2026</div>
+        </div>
+        <div class="milestone-card">
+          <div class="m-label">Capital level</div>
+          <div class="m-value">Level 2</div>
+          <div class="m-date">14 August 2026</div>
+        </div>
+        <div class="milestone-card">
+          <div class="m-label">Capital level</div>
+          <div class="m-value">Level 3</div>
+          <div class="m-date">14 August 2026</div>
+        </div>
+        <div class="milestone-card">
+          <div class="m-label">District unlocked</div>
+          <div class="m-value">Wizard Valley</div>
+          <div class="m-date">14 August 2026</div>
+        </div>
+        <div class="milestone-card league">
+          <div class="m-label">Capital League</div>
+          <div class="m-value">Bronze III</div>
+          <div class="m-date">Reached 17 August 2026</div>
+        </div>
       </div>
+      <p class="future-note">Detailed Capital statistics and Raid Weekend history can be added here once the API/backend is expanded to provide that data.</p>
     </section>
   </div>
 
-  <!-- CWL -->
+  <!-- CWL panel hidden for now. Restore this block to re-enable the CWL tab. -->
+  <!--
   <div class="tab-panel" id="panel-cwl" role="tabpanel" aria-labelledby="tab-cwl">
     <section>
       <h2>Clan War League</h2>
@@ -342,6 +473,7 @@
       </div>
     </section>
   </div>
+  -->
 
   <footer>United Clan Dashboard · data via Cloudflare Workers + D1</footer>
 </div>
@@ -356,7 +488,9 @@ const WAR_LABELS = {
   notInWar: "Not In War",
 };
 
-const VALID_TABS = ["home", "members", "war", "history", "capital", "cwl"];
+// "cwl" intentionally excluded while the CWL tab/panel are commented out above.
+// Restore "cwl" to this list when re-enabling the CWL tab button and panel.
+const VALID_TABS = ["home", "members", "war", "history", "capital"];
 
 function roleClass(role) {
   if (!role) return "";
@@ -392,6 +526,7 @@ function activateTab(tabName, updateHash) {
   VALID_TABS.forEach(name => {
     const panel = document.getElementById(`panel-${name}`);
     const btn = document.getElementById(`tab-${name}`);
+    if (!panel || !btn) return;
     const isActive = name === tabName;
     panel.classList.toggle("active", isActive);
     btn.setAttribute("aria-selected", isActive ? "true" : "false");
