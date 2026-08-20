@@ -19,6 +19,7 @@
     --radius: 14px;
   }
   * { box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -39,7 +40,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 20px 24px;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
   }
   .clan-title { display: flex; align-items: center; gap: 14px; }
   .clan-badge {
@@ -66,13 +67,53 @@
 
   .updated-banner {
     text-align: center; font-size: 12.5px; color: var(--text-dim);
-    margin-bottom: 20px;
+    margin-bottom: 14px;
   }
   .updated-banner .dot {
     display: inline-block; width: 8px; height: 8px; border-radius: 50%;
     background: var(--win); margin-right: 6px; vertical-align: middle;
   }
   .updated-banner.stale .dot { background: #d99b3f; }
+
+  /* Tab navigation */
+  nav.tab-nav {
+    display: flex;
+    gap: 4px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 6px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  nav.tab-nav::-webkit-scrollbar { height: 4px; }
+  nav.tab-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .tab-btn {
+    flex: 0 0 auto;
+    appearance: none;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .tab-btn:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+  .tab-btn[aria-selected="true"] {
+    color: #1a1200;
+    background: var(--accent);
+    border-color: var(--accent);
+  }
 
   section {
     background: var(--panel);
@@ -85,6 +126,19 @@
     font-size: 15px; text-transform: uppercase; letter-spacing: 0.6px;
     color: var(--text-dim); margin: 0 0 16px;
   }
+  section h3 {
+    font-size: 13.5px; letter-spacing: 0.3px;
+    color: var(--accent-2); margin: 18px 0 8px;
+  }
+  section p {
+    font-size: 14px; line-height: 1.65; color: var(--text);
+    margin: 0 0 12px;
+  }
+  section p:last-child { margin-bottom: 0; }
+  section p strong { color: var(--accent); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
   .war-status {
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;
@@ -125,6 +179,18 @@
 
   .empty-state { color: var(--text-dim); font-size: 13.5px; text-align: center; padding: 20px 0; }
 
+  .placeholder-panel {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-dim);
+  }
+  .placeholder-panel .icon {
+    font-size: 32px; margin-bottom: 12px; opacity: 0.6;
+  }
+  .placeholder-panel p {
+    font-size: 14px; max-width: 420px; margin: 0 auto; color: var(--text-dim);
+  }
+
   footer { text-align: center; color: var(--text-dim); font-size: 12px; margin-top: 30px; }
 
   @media (max-width: 640px) {
@@ -132,6 +198,8 @@
     .stat-pill { min-width: 70px; padding: 6px 10px; }
     .score-side .stars { font-size: 24px; }
     th, td { padding: 7px 6px; font-size: 12.5px; }
+    .tab-btn { padding: 8px 14px; font-size: 12.5px; }
+    section { padding: 16px; }
   }
 </style>
 </head>
@@ -158,80 +226,121 @@
     <span class="dot"></span><span id="updatedText">Loading…</span>
   </div>
 
+  <nav class="tab-nav" role="tablist" aria-label="Dashboard sections" id="tabNav">
+    <button class="tab-btn" role="tab" data-tab="home" aria-selected="true" aria-controls="panel-home" id="tab-home">Home</button>
+    <button class="tab-btn" role="tab" data-tab="members" aria-selected="false" aria-controls="panel-members" id="tab-members">Members</button>
+    <button class="tab-btn" role="tab" data-tab="war" aria-selected="false" aria-controls="panel-war" id="tab-war">War</button>
+    <button class="tab-btn" role="tab" data-tab="history" aria-selected="false" aria-controls="panel-history" id="tab-history">History</button>
+    <button class="tab-btn" role="tab" data-tab="capital" aria-selected="false" aria-controls="panel-capital" id="tab-capital">Capital</button>
+    <button class="tab-btn" role="tab" data-tab="cwl" aria-selected="false" aria-controls="panel-cwl" id="tab-cwl">CWL</button>
+  </nav>
+
+  <!-- HOME -->
+  <div class="tab-panel active" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
     <section>
-    <h2>About the Clan</h2>
+      <h2>About the Clan</h2>
+      <p><strong>Clan creation date:</strong> Friday, 7 August 2026</p>
+      <p>The clan was created by Boss_Hoss and Tito on the date above. Both of them played together in a clan named Clan for Wars in late 2025 and early 2026. The clan was discontinued in July 2026, as its leader and co-leaders became busy with university studies and preparation for competitive examinations.</p>
+      <p>This resulted in the other members of Clan for Wars having to find new clans. After some gradual hopping between clans, Tito proposed to Boss_Hoss that they find a place where they could settle, and this clan was formed.</p>
 
-    <p><strong>Clan creation date:</strong> Friday, 7 August 2026</p>
+      <h3>Initial days</h3>
+      <p>Initially, we tried to get members into the clan. Our good old friend Ankan joined the clan. We regularly posted Clan Notices to attract new players.</p>
 
-    <p>The clan was created by Boss_Hoss and Tito on Friday, 7 August 2026. Both of them played together in a clan named Clan for Wars in late 2025 and early 2026. The clan was discontinued in July 2026, as its leader and co-leaders became busy with university studies and preparation for competitive examinations.</p>
+      <h3>Clan Rules</h3>
+      <p>Initially, all members, regardless of Town Hall level, are given the Elder role. This requirement will gradually change as the clan develops.</p>
+      <p>The Co-leader role is currently reserved for the main accounts of the founding members, Boss_Hoss and Tito, and our good old friend Ankan.</p>
+    </section>
+  </div>
 
-    <p>This resulted in the other members of Clan for Wars having to find new clans. After some gradual hopping between clans, Tito proposed to Boss_Hoss that they find a place where they could settle, and this clan was formed.</p>
-  </section>
-
-  <section>
-    <h2>Initial days</h2>
-
-    <p>Initially, we tried to get members into the clan. Our good old friend Ankan joined the clan. We regularly posted Clan Notices to attract new players.</p>
-  </section>
-
-  <section>
-    <h2>Clan Rules</h2>
-
-    <p>Initially, all members, regardless of Town Hall level, are given the Elder role. This requirement will gradually change as the clan develops.</p>
-
-    <p>The Co-leader role is currently reserved for the main accounts of the founding members, Boss_Hoss and Tito, and our good old friend Ankan.</p>
-  </section>
-
-
-  <section>
-    <h2>Current war</h2>
-    <div class="war-status">
-      <span class="war-badge unknown" id="warBadge">Loading</span>
-      <div id="warMeta" style="color:var(--text-dim); font-size:13px;"></div>
-    </div>
-    <div class="score-board" id="scoreBoard" style="display:none;">
-      <div class="score-side">
-        <div class="name" id="usName">United</div>
-        <div class="stars" id="usStars">0 ★</div>
-        <div class="destro" id="usDestro">0%</div>
+  <!-- MEMBERS -->
+  <div class="tab-panel" id="panel-members" role="tabpanel" aria-labelledby="tab-members">
+    <section>
+      <h2>Members</h2>
+      <div class="table-scroll">
+        <table id="membersTable">
+          <thead>
+            <tr>
+              <th>#</th><th>Name</th><th>Role</th><th class="num">TH</th>
+              <th class="num">Trophies</th><th class="num">Donations</th><th class="num">Received</th>
+            </tr>
+          </thead>
+          <tbody id="membersBody"></tbody>
+        </table>
+        <div class="empty-state" id="membersEmpty" style="display:none;">No member data yet.</div>
       </div>
-      <div class="vs">VS</div>
-      <div class="score-side">
-        <div class="name" id="oppName">Opponent</div>
-        <div class="stars" id="oppStars">0 ★</div>
-        <div class="destro" id="oppDestro">0%</div>
+    </section>
+  </div>
+
+  <!-- WAR -->
+  <div class="tab-panel" id="panel-war" role="tabpanel" aria-labelledby="tab-war">
+    <section>
+      <h2>Current war</h2>
+      <div class="war-status">
+        <span class="war-badge unknown" id="warBadge">Loading</span>
+        <div id="warMeta" style="color:var(--text-dim); font-size:13px;"></div>
       </div>
-    </div>
-  </section>
+      <div class="score-board" id="scoreBoard" style="display:none;">
+        <div class="score-side">
+          <div class="name" id="usName">United</div>
+          <div class="stars" id="usStars">0 ★</div>
+          <div class="destro" id="usDestro">0%</div>
+        </div>
+        <div class="vs">VS</div>
+        <div class="score-side">
+          <div class="name" id="oppName">Opponent</div>
+          <div class="stars" id="oppStars">0 ★</div>
+          <div class="destro" id="oppDestro">0%</div>
+        </div>
+      </div>
+      <div class="empty-state" id="warEmpty" style="display:none;">Not in war right now.</div>
+    </section>
 
-  <section>
-    <h2>War attacks</h2>
-    <div class="table-scroll">
-      <table id="attacksTable">
-        <thead>
-          <tr><th>Attacker</th><th>Defender</th><th class="num">Stars</th><th class="num">Destruction</th></tr>
-        </thead>
-        <tbody id="attacksBody"></tbody>
-      </table>
-      <div class="empty-state" id="attacksEmpty" style="display:none;">No attacks recorded yet.</div>
-    </div>
-  </section>
+    <section>
+      <h2>War attacks</h2>
+      <div class="table-scroll">
+        <table id="attacksTable">
+          <thead>
+            <tr><th>Attacker</th><th>Defender</th><th class="num">Stars</th><th class="num">Destruction</th></tr>
+          </thead>
+          <tbody id="attacksBody"></tbody>
+        </table>
+        <div class="empty-state" id="attacksEmpty" style="display:none;">No attacks recorded yet.</div>
+      </div>
+    </section>
+  </div>
 
-  <section>
-    <h2>Members</h2>
-    <div class="table-scroll">
-      <table id="membersTable">
-        <thead>
-          <tr>
-            <th>#</th><th>Name</th><th>Role</th><th class="num">TH</th>
-            <th class="num">Trophies</th><th class="num">Donations</th><th class="num">Received</th>
-          </tr>
-        </thead>
-        <tbody id="membersBody"></tbody>
-      </table>
-      <div class="empty-state" id="membersEmpty" style="display:none;">No member data yet.</div>
-    </div>
-  </section>
+  <!-- HISTORY -->
+  <div class="tab-panel" id="panel-history" role="tabpanel" aria-labelledby="tab-history">
+    <section>
+      <h2>Clan History</h2>
+      <div class="placeholder-panel">
+        <div class="icon">📜</div>
+        <p>Clan history will be recorded here as United grows.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- CAPITAL -->
+  <div class="tab-panel" id="panel-capital" role="tabpanel" aria-labelledby="tab-capital">
+    <section>
+      <h2>Clan Capital</h2>
+      <div class="placeholder-panel">
+        <div class="icon">🏰</div>
+        <p>Capital statistics and Raid Weekend history will appear here when Capital data is added to the API.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- CWL -->
+  <div class="tab-panel" id="panel-cwl" role="tabpanel" aria-labelledby="tab-cwl">
+    <section>
+      <h2>Clan War League</h2>
+      <div class="placeholder-panel">
+        <div class="icon">⚔️</div>
+        <p>Clan War League statistics and history will appear here when CWL data is added to the API.</p>
+      </div>
+    </section>
+  </div>
 
   <footer>United Clan Dashboard · data via Cloudflare Workers + D1</footer>
 </div>
@@ -245,6 +354,8 @@ const WAR_LABELS = {
   warEnded: "War Ended",
   notInWar: "Not In War",
 };
+
+const VALID_TABS = ["home", "members", "war", "history", "capital", "cwl"];
 
 function roleClass(role) {
   if (!role) return "";
@@ -271,6 +382,54 @@ function timeAgo(iso) {
   const days = Math.floor(hrs / 24);
   return `${days} day${days > 1 ? "s" : ""} ago`;
 }
+
+/* ---------- Tab navigation ---------- */
+
+function activateTab(tabName, updateHash) {
+  if (!VALID_TABS.includes(tabName)) tabName = "home";
+
+  VALID_TABS.forEach(name => {
+    const panel = document.getElementById(`panel-${name}`);
+    const btn = document.getElementById(`tab-${name}`);
+    const isActive = name === tabName;
+    panel.classList.toggle("active", isActive);
+    btn.setAttribute("aria-selected", isActive ? "true" : "false");
+  });
+
+  if (updateHash !== false && window.location.hash !== `#${tabName}`) {
+    history.pushState(null, "", `#${tabName}`);
+  }
+}
+
+function initTabs() {
+  const nav = document.getElementById("tabNav");
+  nav.addEventListener("click", (e) => {
+    const btn = e.target.closest(".tab-btn");
+    if (!btn) return;
+    activateTab(btn.dataset.tab, true);
+  });
+
+  nav.addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const buttons = Array.from(nav.querySelectorAll(".tab-btn"));
+    const currentIndex = buttons.findIndex(b => b.getAttribute("aria-selected") === "true");
+    let nextIndex = e.key === "ArrowRight" ? currentIndex + 1 : currentIndex - 1;
+    if (nextIndex < 0) nextIndex = buttons.length - 1;
+    if (nextIndex >= buttons.length) nextIndex = 0;
+    buttons[nextIndex].focus();
+    activateTab(buttons[nextIndex].dataset.tab, true);
+  });
+
+  window.addEventListener("hashchange", () => {
+    const tabName = window.location.hash.replace("#", "");
+    activateTab(tabName, false);
+  });
+
+  const initialTab = window.location.hash.replace("#", "") || "home";
+  activateTab(initialTab, false);
+}
+
+/* ---------- Data fetching (unchanged behaviour) ---------- */
 
 async function loadDashboard() {
   try {
@@ -311,6 +470,7 @@ function render(data) {
   const warBadge = document.getElementById("warBadge");
   const warMeta = document.getElementById("warMeta");
   const scoreBoard = document.getElementById("scoreBoard");
+  const warEmpty = document.getElementById("warEmpty");
 
   if (war && war.state) {
     warBadge.textContent = WAR_LABELS[war.state] || war.state;
@@ -319,6 +479,7 @@ function render(data) {
 
     if (war.state !== "notInWar") {
       scoreBoard.style.display = "grid";
+      warEmpty.style.display = "none";
       document.getElementById("usName").textContent = clan?.name || "United";
       document.getElementById("usStars").textContent = `${war.clan_stars ?? 0} ★`;
       document.getElementById("usDestro").textContent = `${(war.clan_destruction ?? 0).toFixed ? war.clan_destruction.toFixed(1) : war.clan_destruction}%`;
@@ -327,11 +488,13 @@ function render(data) {
       document.getElementById("oppDestro").textContent = `${(war.opponent_destruction ?? 0).toFixed ? war.opponent_destruction.toFixed(1) : war.opponent_destruction}%`;
     } else {
       scoreBoard.style.display = "none";
+      warEmpty.style.display = "block";
     }
   } else {
     warBadge.textContent = "No war data";
     warBadge.className = "war-badge unknown";
     scoreBoard.style.display = "none";
+    warEmpty.style.display = "block";
   }
 
   const attacksBody = document.getElementById("attacksBody");
@@ -376,6 +539,7 @@ function render(data) {
   }
 }
 
+initTabs();
 loadDashboard();
 setInterval(loadDashboard, 60000);
 </script>
