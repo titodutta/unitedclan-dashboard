@@ -518,9 +518,13 @@ function activateTab(tabName, updateHash) {
     btn.setAttribute("aria-selected", isActive ? "true" : "false");
   });
 
-  if (updateHash !== false && window.location.hash !== `#${tabName}`) {
+  if (updateHash !== false) {
+  if (tabName === "home") {
+    history.pushState(null, "", window.location.pathname + window.location.search);
+  } else if (window.location.hash !== `#${tabName}`) {
     history.pushState(null, "", `#${tabName}`);
   }
+}
 }
 
 function initTabs() {
