@@ -1,480 +1,772 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>United — Clan Dashboard</title>
-<style>
-  :root {
-    --bg: #0f1420;
-    --panel: #182135;
-    --panel-2: #1f2a45;
-    --border: #2a3752;
-    --accent: #ffb100;
-    --accent-2: #4fc3f7;
-    --text: #e8edf7;
-    --text-dim: #93a0bd;
-    --win: #4caf50;
-    --lose: #e5484d;
-    --radius: 14px;
-  }
-  * { box-sizing: border-box; }
-  html, body { overflow-x: hidden; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: radial-gradient(circle at top, #1a2338 0%, var(--bg) 60%);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 24px 16px 60px;
-  }
-  .wrap { max-width: 1080px; margin: 0 auto; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>United — Clan Dashboard</title>
+  <style>
+    :root {
+      --bg: #0f1420;
+      --panel: #182135;
+      --panel-2: #1f2a45;
+      --border: #2a3752;
+      --accent: #ffb100;
+      --accent-2: #4fc3f7;
+      --text: #e8edf7;
+      --text-dim: #93a0bd;
+      --win: #4caf50;
+      --lose: #e5484d;
+      --radius: 14px;
+    }
 
-  header.clan-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    background: linear-gradient(135deg, var(--panel), var(--panel-2));
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    margin-bottom: 14px;
-  }
-  .clan-title { display: flex; align-items: center; gap: 14px; }
-  .clan-badge {
-    width: 52px; height: 52px; border-radius: 12px;
-    background: linear-gradient(135deg, var(--accent), #ff7a00);
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 22px; color: #1a1200;
-    flex-shrink: 0;
-  }
-  .clan-title h1 { margin: 0; font-size: 22px; letter-spacing: 0.3px; }
-  .clan-title .tag { color: var(--text-dim); font-size: 13px; }
+    * {
+      box-sizing: border-box;
+    }
 
-  .stat-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .stat-pill {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 8px 14px;
-    text-align: center;
-    min-width: 90px;
-  }
-  .stat-pill .v { font-size: 17px; font-weight: 700; color: var(--accent-2); }
-  .stat-pill .l { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+    html,
+    body {
+      overflow-x: hidden;
+    }
 
-  .updated-banner {
-    text-align: center; font-size: 12.5px; color: var(--text-dim);
-    margin-bottom: 14px;
-  }
-  .updated-banner .dot {
-    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-    background: var(--win); margin-right: 6px; vertical-align: middle;
-  }
-  .updated-banner.stale .dot { background: #d99b3f; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top, #1a2338 0%, var(--bg) 60%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+    }
 
-  /* Tab navigation */
-  nav.tab-nav {
-    display: flex;
-    gap: 4px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 6px;
-    margin-bottom: 20px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-  }
-  nav.tab-nav::-webkit-scrollbar { height: 4px; }
-  nav.tab-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
 
-  .tab-btn {
-    flex: 0 0 auto;
-    appearance: none;
-    background: transparent;
-    border: 1px solid transparent;
-    color: var(--text-dim);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
-  }
-  .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
-  .tab-btn:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
-  .tab-btn[aria-selected="true"] {
-    color: #1a1200;
-    background: var(--accent);
-    border-color: var(--accent);
-  }
+    header.clan-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      background: linear-gradient(135deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 14px;
+    }
 
-  section {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-  section h2 {
-    font-size: 15px; text-transform: uppercase; letter-spacing: 0.6px;
-    color: var(--text-dim); margin: 0 0 16px;
-  }
-  section h2:not(:first-child) { margin-top: 22px; }
-  section p {
-    font-size: 14px; line-height: 1.65; color: var(--text);
-    margin: 0 0 12px;
-  }
-  section p:last-child { margin-bottom: 0; }
-  section p strong { color: var(--accent); }
+    .clan-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+    .clan-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #ff7a00);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 22px;
+      color: #1a1200;
+      flex-shrink: 0;
+    }
 
-  .war-status {
-    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;
-  }
-  .war-badge {
-    font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px;
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .war-badge.inWar { background: rgba(255,177,0,0.15); color: var(--accent); border: 1px solid var(--accent); }
-  .war-badge.warEnded { background: rgba(79,195,247,0.15); color: var(--accent-2); border: 1px solid var(--accent-2); }
-  .war-badge.notInWar, .war-badge.unknown { background: rgba(147,160,189,0.15); color: var(--text-dim); border: 1px solid var(--border); }
-  .war-badge.preparation { background: rgba(229,72,77,0.15); color: var(--lose); border: 1px solid var(--lose); }
+    .clan-title h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0.3px;
+    }
 
-  .score-board {
-    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px;
-    margin-top: 16px;
-  }
-  .score-side { text-align: center; }
-  .score-side .name { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
-  .score-side .stars { font-size: 30px; font-weight: 800; color: var(--accent); }
-  .score-side .destro { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
-  .vs { font-size: 13px; color: var(--text-dim); font-weight: 700; }
+    .clan-title .tag {
+      color: var(--text-dim);
+      font-size: 13px;
+    }
 
-  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-  th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--border); }
-  th { color: var(--text-dim); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.4px; }
-  tr:last-child td { border-bottom: none; }
-  td.num, th.num { text-align: right; }
-  .role-badge {
-    font-size: 11px; padding: 2px 8px; border-radius: 8px;
-    background: rgba(79,195,247,0.12); color: var(--accent-2);
-    text-transform: capitalize; white-space: nowrap;
-  }
-  .role-badge.leader { background: rgba(255,177,0,0.15); color: var(--accent); }
-  .role-badge.coleader { background: rgba(229,72,77,0.12); color: #ff8a8d; }
+    .stat-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-  .table-scroll { overflow-x: auto; }
+    .stat-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      text-align: center;
+      min-width: 90px;
+    }
 
-  .empty-state { color: var(--text-dim); font-size: 13.5px; text-align: center; padding: 20px 0; }
+    .stat-pill .v {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--accent-2);
+    }
 
-  .placeholder-panel {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--text-dim);
-  }
-  .placeholder-panel .icon {
-    font-size: 32px; margin-bottom: 12px; opacity: 0.6;
-  }
-  .placeholder-panel p {
-    font-size: 14px; max-width: 420px; margin: 0 auto; color: var(--text-dim);
-  }
+    .stat-pill .l {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-  /* Timeline (Clan History) */
-  .timeline {
-    position: relative;
-    margin: 10px 0 0;
-    padding-left: 28px;
-  }
-  .timeline::before {
-    content: "";
-    position: absolute;
-    left: 6px;
-    top: 6px;
-    bottom: 6px;
-    width: 2px;
-    background: var(--border);
-  }
-  .timeline-item {
-    position: relative;
-    padding-bottom: 22px;
-  }
-  .timeline-item:last-child { padding-bottom: 0; }
-  .timeline-item::before {
-    content: "";
-    position: absolute;
-    left: -28px;
-    top: 4px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 2px solid var(--panel);
-    box-shadow: 0 0 0 2px var(--accent);
-  }
-  .timeline-date {
-    font-size: 11.5px;
-    font-weight: 700;
-    color: var(--accent-2);
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    margin-bottom: 4px;
-  }
-  .timeline-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-  .timeline-desc {
-    font-size: 13.5px;
-    color: var(--text-dim);
-    line-height: 1.55;
-  }
+    .updated-banner {
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
 
-  /* Capital milestone cards */
-  .milestone-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    margin-top: 10px;
-  }
-  .milestone-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-  }
-  .milestone-card .m-label {
-    font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px;
-    color: var(--text-dim); margin-bottom: 6px;
-  }
-  .milestone-card .m-value {
-    font-size: 15px; font-weight: 700; color: var(--accent-2);
-  }
-  .milestone-card .m-date {
-    font-size: 12px; color: var(--text-dim); margin-top: 4px;
-  }
-  .milestone-card.league .m-value { color: var(--accent); }
-  .future-note {
-    margin-top: 16px;
-    font-size: 12.5px;
-    color: var(--text-dim);
-    border-top: 1px dashed var(--border);
-    padding-top: 12px;
-  }
+    .updated-banner .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--win);
+      margin-right: 6px;
+      vertical-align: middle;
+    }
 
-  footer { text-align: center; color: var(--text-dim); font-size: 12px; margin-top: 30px; }
+    .updated-banner.stale .dot {
+      background: #d99b3f;
+    }
 
-  @media (max-width: 640px) {
-    .clan-title h1 { font-size: 18px; }
-    .stat-pill { min-width: 70px; padding: 6px 10px; }
-    .score-side .stars { font-size: 24px; }
-    th, td { padding: 7px 6px; font-size: 12.5px; }
-    .tab-btn { padding: 8px 14px; font-size: 12.5px; }
-    section { padding: 16px; }
-    .milestone-grid { grid-template-columns: 1fr 1fr; }
-  }
-  .clan-banner {
-  width: 100%;
-  max-width: 500px;
-  margin: 18px auto 22px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
+    /* Tab navigation */
+    nav.tab-nav {
+      display: flex;
+      gap: 4px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 6px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
 
-.clan-banner img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
+    nav.tab-nav::-webkit-scrollbar {
+      height: 4px;
+    }
 
-.clan-banner-caption {
-  padding: 6px 10px;
-  background: var(--panel-2);
-  color: var(--text-dim);
-  font-size: 11.5px;
-  text-align: center;
-}
+    nav.tab-nav::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
 
-@media (max-width: 640px) {
-  .clan-banner {
-    max-width: 100%;
-  }
-}
-</style>
-<link rel="icon" type="image/png" href="/favicon.png">
+    .tab-btn {
+      flex: 0 0 auto;
+      appearance: none;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-dim);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn:focus-visible {
+      outline: 2px solid var(--accent-2);
+      outline-offset: 2px;
+    }
+
+    .tab-btn[aria-selected="true"] {
+      color: #1a1200;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    section h2 {
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-dim);
+      margin: 0 0 16px;
+    }
+
+    section h2:not(:first-child) {
+      margin-top: 22px;
+    }
+
+    section p {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text);
+      margin: 0 0 12px;
+    }
+
+    section p:last-child {
+      margin-bottom: 0;
+    }
+
+    section p strong {
+      color: var(--accent);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .war-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .war-badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .war-badge.inWar {
+      background: rgba(255, 177, 0, 0.15);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .war-badge.warEnded {
+      background: rgba(79, 195, 247, 0.15);
+      color: var(--accent-2);
+      border: 1px solid var(--accent-2);
+    }
+
+    .war-badge.notInWar,
+    .war-badge.unknown {
+      background: rgba(147, 160, 189, 0.15);
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+    }
+
+    .war-badge.preparation {
+      background: rgba(229, 72, 77, 0.15);
+      color: var(--lose);
+      border: 1px solid var(--lose);
+    }
+
+    .score-board {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .score-side {
+      text-align: center;
+    }
+
+    .score-side .name {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .score-side .stars {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .score-side .destro {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .vs {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.4px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    td.num,
+    th.num {
+      text-align: right;
+    }
+
+    .role-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 8px;
+      background: rgba(79, 195, 247, 0.12);
+      color: var(--accent-2);
+      text-transform: capitalize;
+      white-space: nowrap;
+    }
+
+    .role-badge.leader {
+      background: rgba(255, 177, 0, 0.15);
+      color: var(--accent);
+    }
+
+    .role-badge.coleader {
+      background: rgba(229, 72, 77, 0.12);
+      color: #ff8a8d;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    .empty-state {
+      color: var(--text-dim);
+      font-size: 13.5px;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .placeholder-panel {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-dim);
+    }
+
+    .placeholder-panel .icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      opacity: 0.6;
+    }
+
+    .placeholder-panel p {
+      font-size: 14px;
+      max-width: 420px;
+      margin: 0 auto;
+      color: var(--text-dim);
+    }
+
+    /* Timeline (Clan History) */
+    .timeline {
+      position: relative;
+      margin: 10px 0 0;
+      padding-left: 28px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 22px;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -28px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--panel);
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+
+    .timeline-date {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--accent-2);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 4px;
+    }
+
+    .timeline-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .timeline-desc {
+      font-size: 13.5px;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+
+    /* Capital milestone cards */
+    .milestone-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .milestone-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .milestone-card .m-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .milestone-card .m-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent-2);
+    }
+
+    .milestone-card .m-date {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .milestone-card.league .m-value {
+      color: var(--accent);
+    }
+
+    .future-note {
+      margin-top: 16px;
+      font-size: 12.5px;
+      color: var(--text-dim);
+      border-top: 1px dashed var(--border);
+      padding-top: 12px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 12px;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 640px) {
+      .clan-title h1 {
+        font-size: 18px;
+      }
+
+      .stat-pill {
+        min-width: 70px;
+        padding: 6px 10px;
+      }
+
+      .score-side .stars {
+        font-size: 24px;
+      }
+
+      th,
+      td {
+        padding: 7px 6px;
+        font-size: 12.5px;
+      }
+
+      .tab-btn {
+        padding: 8px 14px;
+        font-size: 12.5px;
+      }
+
+      section {
+        padding: 16px;
+      }
+
+      .milestone-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .clan-banner {
+      width: 100%;
+      max-width: 500px;
+      margin: 18px auto 22px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .clan-banner img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .clan-banner-caption {
+      padding: 6px 10px;
+      background: var(--panel-2);
+      color: var(--text-dim);
+      font-size: 11.5px;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .clan-banner {
+        max-width: 100%;
+      }
+    }
+  </style>
+  <link rel="icon" type="image/png" href="/favicon.png">
 </head>
+
 <body>
-<div class="wrap">
+  <div class="wrap">
 
-  <header class="clan-header">
-    <div class="clan-title">
-      <div class="clan-badge">U</div>
-      <div>
-        <h1 id="clanName">United</h1>
-        <div class="tag" id="clanTag">#2U0PYRUU2</div>
+    <header class="clan-header">
+      <div class="clan-title">
+        <div class="clan-badge">U</div>
+        <div>
+          <h1 id="clanName">United</h1>
+          <div class="tag" id="clanTag">#2U0PYRUU2</div>
+        </div>
       </div>
-    </div>
-    <div class="stat-row" id="statRow">
-      <div class="stat-pill"><div class="v" id="statLevel">—</div><div class="l">Level</div></div>
-      <div class="stat-pill"><div class="v" id="statMembers">—</div><div class="l">Members</div></div>
-      <div class="stat-pill"><div class="v" id="statPoints">—</div><div class="l">Points</div></div>
-      <div class="stat-pill"><div class="v" id="statWinStreak">—</div><div class="l">Win streak</div></div>
-    </div>
-  </header>
+      <div class="stat-row" id="statRow">
+        <div class="stat-pill">
+          <div class="v" id="statLevel">—</div>
+          <div class="l">Level</div>
+        </div>
+        <div class="stat-pill">
+          <div class="v" id="statMembers">—</div>
+          <div class="l">Members</div>
+        </div>
+        <div class="stat-pill">
+          <div class="v" id="statPoints">—</div>
+          <div class="l">Points</div>
+        </div>
+        <div class="stat-pill">
+          <div class="v" id="statWinStreak">—</div>
+          <div class="l">Win streak</div>
+        </div>
+      </div>
+    </header>
 
 
-  <nav class="tab-nav" role="tablist" aria-label="Dashboard sections" id="tabNav">
-    <button class="tab-btn" role="tab" data-tab="home" aria-selected="false" aria-controls="panel-home" id="tab-home">Home</button>
-    <button class="tab-btn" role="tab" data-tab="history" aria-selected="true" aria-controls="panel-history" id="tab-history">Clan History</button>
-    <button class="tab-btn" role="tab" data-tab="members" aria-selected="false" aria-controls="panel-members" id="tab-members">Members</button>
-    <button class="tab-btn" role="tab" data-tab="war" aria-selected="false" aria-controls="panel-war" id="tab-war">War</button>
-    <button class="tab-btn" role="tab" data-tab="capital" aria-selected="false" aria-controls="panel-capital" id="tab-capital">Capital</button>
-    <!-- CWL tab hidden for now. Restore this button to re-enable the CWL tab. -->
-    <!--
+    <nav class="tab-nav" role="tablist" aria-label="Dashboard sections" id="tabNav">
+      <button class="tab-btn" role="tab" data-tab="home" aria-selected="false" aria-controls="panel-home"
+        id="tab-home">Home</button>
+      <button class="tab-btn" role="tab" data-tab="history" aria-selected="true" aria-controls="panel-history"
+        id="tab-history">Clan History</button>
+      <button class="tab-btn" role="tab" data-tab="members" aria-selected="false" aria-controls="panel-members"
+        id="tab-members">Members</button>
+      <button class="tab-btn" role="tab" data-tab="war" aria-selected="false" aria-controls="panel-war"
+        id="tab-war">War</button>
+      <button class="tab-btn" role="tab" data-tab="capital" aria-selected="false" aria-controls="panel-capital"
+        id="tab-capital">Capital</button>
+      <!-- CWL tab hidden for now. Restore this button to re-enable the CWL tab. -->
+      <!--
     <button class="tab-btn" role="tab" data-tab="cwl" aria-selected="false" aria-controls="panel-cwl" id="tab-cwl">CWL</button>
     -->
-  </nav>
+    </nav>
 
-  <!-- CLAN HISTORY -->
-  <div class="tab-panel active" id="panel-history" role="tabpanel" aria-labelledby="tab-history">
-    <section>
-      <h2>Clan History</h2>
-      <div class="timeline" id="historyTimeline"></div>
-      <div class="empty-state" id="historyEmpty" style="display:none;">No history recorded yet.</div>
-    </section>
-  </div>
+    <!-- CLAN HISTORY -->
+    <div class="tab-panel active" id="panel-history" role="tabpanel" aria-labelledby="tab-history">
+      <section>
+        <h2>Clan History</h2>
+        <div class="timeline" id="historyTimeline"></div>
+        <div class="empty-state" id="historyEmpty" style="display:none;">No history recorded yet.</div>
+      </section>
+    </div>
 
-  <!-- HOME -->
-  <div class="tab-panel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
-    <section>
-      <h2>About the Clan</h2>
-      <p><strong>Clan creation date:</strong> Friday, 7 August 2026</p>
-      <p>The clan was created by Boss_Hoss and Tito on the date above. Both of them played together in a clan named <em>Clan for Wars</em> in late 2025 and early 2026. The clan was discontinued in July 2026, as its leader and co-leaders became busy with university studies and preparation for competitive examinations.</p>
-      <p>This resulted in the other members of Clan for Wars having to find new clans. After some gradual hopping between clans, Tito proposed to Boss_Hoss that they find a place where they could settle, and this clan was formed.</p>
+    <!-- HOME -->
+    <div class="tab-panel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
+      <section>
+        <h2>Welcome!</h2>
+        <p><strong>Clan creation date:</strong> Friday, 7 August 2026</p>
 
-<div class="clan-banner">
-  <img
-    src="/assets/images/united-clan-banner-2026-08-21.jpeg"
-    alt="United Clan banner, 21 August 2026"
-  >
-  <div class="clan-banner-caption">United Clan banner · 21 August 2026</div>
-</div>
-
-<h2>Initial days</h2>
-      <h2>Initial days</h2>
-      <p>Initially, we tried to get members into the clan. Our good old friend Ankan joined the clan. We regularly posted Clan Notices to attract new players.</p>
-
-      <h2>Clan Rules</h2>
-      <p>Initially, all members, regardless of Town Hall level, are given the Elder role. This requirement will gradually change as the clan develops.</p>
-      <p>The Co-leader role is currently reserved for the main accounts of the founding members, Boss_Hoss and Tito, and our good old friend Ankan.</p>
-    </section>
-  </div>
-
-  <!-- MEMBERS -->
-  <div class="tab-panel" id="panel-members" role="tabpanel" aria-labelledby="tab-members">
-    <section>
-      <h2>Members</h2>
-      <div class="table-scroll">
-        <table id="membersTable">
-          <thead>
-            <tr>
-              <th>#</th><th>Name</th><th>Role</th><th class="num">TH</th>
-              <th class="num">Trophies</th><th class="num">Donations</th><th class="num">Received</th>
-            </tr>
-          </thead>
-          <tbody id="membersBody"></tbody>
-        </table>
-        <div class="empty-state" id="membersEmpty" style="display:none;">No member data yet.</div>
-      </div>
-    </section>
-  </div>
-
-  <!-- WAR -->
-  <div class="tab-panel" id="panel-war" role="tabpanel" aria-labelledby="tab-war">
-    <section>
-      <h2>Current war</h2>
-      <div class="war-status">
-        <span class="war-badge unknown" id="warBadge">Loading</span>
-        <div id="warMeta" style="color:var(--text-dim); font-size:13px;"></div>
-      </div>
-      <div class="score-board" id="scoreBoard" style="display:none;">
-        <div class="score-side">
-          <div class="name" id="usName">United</div>
-          <div class="stars" id="usStars">0 ★</div>
-          <div class="destro" id="usDestro">0%</div>
+        <div class="clan-banner">
+          <img src="/assets/images/united-clan-banner-2026-08-21.jpeg" alt="United Clan banner, 21 August 2026">
+          <div class="clan-banner-caption">United Clan banner · 21 August 2026</div>
         </div>
-        <div class="vs">VS</div>
-        <div class="score-side">
-          <div class="name" id="oppName">Opponent</div>
-          <div class="stars" id="oppStars">0 ★</div>
-          <div class="destro" id="oppDestro">0%</div>
-        </div>
-      </div>
-      <div class="empty-state" id="warEmpty" style="display:none;">Not in war right now.</div>
-    </section>
+        <p>The clan was created by Boss_Hoss and Tito on the date above. Both of them played together in a clan named
+          <em>Clan for Wars</em> in late 2025 and early 2026. The clan was discontinued in July 2026, as its leader and
+          co-leaders became busy with university studies and preparation for competitive examinations.</p>
+        <p>This resulted in the other members of Clan for Wars having to find new clans. After some gradual hopping
+          between clans, Tito proposed to Boss_Hoss that they find a place where they could settle, and this clan was
+          formed.</p>
 
-    <section>
-      <h2>War attacks</h2>
-      <div class="table-scroll">
-        <table id="attacksTable">
-          <thead>
-            <tr><th>Attacker</th><th>Defender</th><th class="num">Stars</th><th class="num">Destruction</th></tr>
-          </thead>
-          <tbody id="attacksBody"></tbody>
-        </table>
-        <div class="empty-state" id="attacksEmpty" style="display:none;">No attacks recorded yet.</div>
-      </div>
-    </section>
-  </div>
 
-  <!-- CAPITAL -->
-  <div class="tab-panel" id="panel-capital" role="tabpanel" aria-labelledby="tab-capital">
-    <section>
-      <h2>Clan Capital</h2>
-      <div class="milestone-grid">
-        <div class="milestone-card">
-          <div class="m-label">Capital unlocked</div>
-          <div class="m-value">Unlocked</div>
-          <div class="m-date">13 August 2026</div>
-        </div>
-        <div class="milestone-card">
-          <div class="m-label">Capital level</div>
-          <div class="m-value">Level 2</div>
-          <div class="m-date">14 August 2026</div>
-        </div>
-        <div class="milestone-card">
-          <div class="m-label">Capital level</div>
-          <div class="m-value">Level 3</div>
-          <div class="m-date">14 August 2026</div>
-        </div>
-        <div class="milestone-card">
-          <div class="m-label">District unlocked</div>
-          <div class="m-value">Wizard Valley</div>
-          <div class="m-date">14 August 2026</div>
-        </div>
-        <div class="milestone-card league">
-          <div class="m-label">Capital League</div>
-          <div class="m-value">Bronze III</div>
-          <div class="m-date">Reached 17 August 2026</div>
-        </div>
-      </div>
-      <p class="future-note">Detailed Capital statistics and Raid Weekend history can be added here once the API/backend is expanded to provide that data.</p>
-    </section>
-  </div>
+        <h2>Initial days</h2>
+        <p>Initially, we tried to get members into the clan. Our good old friend Ankan joined the clan. We regularly
+          posted Clan Notices to attract new players.</p>
 
-  <!-- CWL panel hidden for now. Restore this block to re-enable the CWL tab. -->
-  <!--
+        <h2>Clan Rules</h2>
+        <p>Initially, all members, regardless of Town Hall level, are given the Elder role. This requirement will
+          gradually change as the clan develops.</p>
+        <p>The Co-leader role is currently reserved for the main accounts of the founding members, Boss_Hoss and Tito,
+          and our good old friend Ankan.</p>
+      </section>
+    </div>
+
+    <!-- MEMBERS -->
+    <div class="tab-panel" id="panel-members" role="tabpanel" aria-labelledby="tab-members">
+      <section>
+        <h2>Members</h2>
+        <div class="table-scroll">
+          <table id="membersTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th class="num">TH</th>
+                <th class="num">Trophies</th>
+                <th class="num">Donations</th>
+                <th class="num">Received</th>
+              </tr>
+            </thead>
+            <tbody id="membersBody"></tbody>
+          </table>
+          <div class="empty-state" id="membersEmpty" style="display:none;">No member data yet.</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- WAR -->
+    <div class="tab-panel" id="panel-war" role="tabpanel" aria-labelledby="tab-war">
+      <section>
+        <h2>Current war</h2>
+        <div class="war-status">
+          <span class="war-badge unknown" id="warBadge">Loading</span>
+          <div id="warMeta" style="color:var(--text-dim); font-size:13px;"></div>
+        </div>
+        <div class="score-board" id="scoreBoard" style="display:none;">
+          <div class="score-side">
+            <div class="name" id="usName">United</div>
+            <div class="stars" id="usStars">0 ★</div>
+            <div class="destro" id="usDestro">0%</div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="score-side">
+            <div class="name" id="oppName">Opponent</div>
+            <div class="stars" id="oppStars">0 ★</div>
+            <div class="destro" id="oppDestro">0%</div>
+          </div>
+        </div>
+        <div class="empty-state" id="warEmpty" style="display:none;">Not in war right now.</div>
+      </section>
+
+      <section>
+        <h2>War attacks</h2>
+        <div class="table-scroll">
+          <table id="attacksTable">
+            <thead>
+              <tr>
+                <th>Attacker</th>
+                <th>Defender</th>
+                <th class="num">Stars</th>
+                <th class="num">Destruction</th>
+              </tr>
+            </thead>
+            <tbody id="attacksBody"></tbody>
+          </table>
+          <div class="empty-state" id="attacksEmpty" style="display:none;">No attacks recorded yet.</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- CAPITAL -->
+    <div class="tab-panel" id="panel-capital" role="tabpanel" aria-labelledby="tab-capital">
+      <section>
+        <h2>Clan Capital</h2>
+        <div class="milestone-grid">
+          <div class="milestone-card">
+            <div class="m-label">Capital unlocked</div>
+            <div class="m-value">Unlocked</div>
+            <div class="m-date">13 August 2026</div>
+          </div>
+          <div class="milestone-card">
+            <div class="m-label">Capital level</div>
+            <div class="m-value">Level 2</div>
+            <div class="m-date">14 August 2026</div>
+          </div>
+          <div class="milestone-card">
+            <div class="m-label">Capital level</div>
+            <div class="m-value">Level 3</div>
+            <div class="m-date">14 August 2026</div>
+          </div>
+          <div class="milestone-card">
+            <div class="m-label">District unlocked</div>
+            <div class="m-value">Wizard Valley</div>
+            <div class="m-date">14 August 2026</div>
+          </div>
+          <div class="milestone-card league">
+            <div class="m-label">Capital League</div>
+            <div class="m-value">Bronze III</div>
+            <div class="m-date">Reached 17 August 2026</div>
+          </div>
+        </div>
+        <p class="future-note">Detailed Capital statistics and Raid Weekend history can be added here once the
+          API/backend is expanded to provide that data.</p>
+      </section>
+    </div>
+
+    <!-- CWL panel hidden for now. Restore this block to re-enable the CWL tab. -->
+    <!--
   <div class="tab-panel" id="panel-cwl" role="tabpanel" aria-labelledby="tab-cwl">
     <section>
       <h2>Clan War League</h2>
@@ -487,212 +779,212 @@
   -->
 
     <div class="updated-banner" id="updatedBanner">
-    <span class="dot"></span><span id="updatedText">Loading…</span>
+      <span class="dot"></span><span id="updatedText">Loading…</span>
+    </div>
+
+
+    <footer>United Clan Dashboard · data via Cloudflare Workers + D1</footer>
   </div>
 
-  
-  <footer>United Clan Dashboard · data via Cloudflare Workers + D1</footer>
-</div>
+  <script>
+    const API_BASE = "https://unitedclan-api.trulytito.workers.dev";
 
-<script>
-const API_BASE = "https://unitedclan-api.trulytito.workers.dev";
+    const WAR_LABELS = {
+      inWar: "In War",
+      preparation: "Preparation Day",
+      warEnded: "War Ended",
+      notInWar: "Not In War",
+    };
 
-const WAR_LABELS = {
-  inWar: "In War",
-  preparation: "Preparation Day",
-  warEnded: "War Ended",
-  notInWar: "Not In War",
-};
+    // "cwl" intentionally excluded while the CWL tab/panel are commented out above.
+    // Restore "cwl" to this list when re-enabling the CWL tab button and panel.
+    const VALID_TABS = ["history", "home", "members", "war", "capital"];
 
-// "cwl" intentionally excluded while the CWL tab/panel are commented out above.
-// Restore "cwl" to this list when re-enabling the CWL tab button and panel.
-const VALID_TABS = ["history", "home", "members", "war", "capital"];
-
-function roleClass(role) {
-  if (!role) return "";
-  const r = role.toLowerCase();
-  if (r === "leader") return "leader";
-  if (r === "coleader" || r === "co-leader") return "coleader";
-  return "";
-}
-
-function roleLabel(role) {
-  if (!role) return "—";
-  const map = { leader: "Leader", coLeader: "Co-leader", coleader: "Co-leader", admin: "Elder", elder: "Elder", member: "Member" };
-  return map[role] || role;
-}
-
-function timeAgo(iso) {
-  if (!iso) return null;
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins} min ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} hr${hrs > 1 ? "s" : ""} ago`;
-  const days = Math.floor(hrs / 24);
-  return `${days} day${days > 1 ? "s" : ""} ago`;
-}
-
-function formatHistoryDate(iso) {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
-}
-
-/* ---------- Tab navigation ---------- */
-
-function activateTab(tabName, updateHash) {
-  if (!VALID_TABS.includes(tabName)) tabName = "home";
-
-  VALID_TABS.forEach(name => {
-    const panel = document.getElementById(`panel-${name}`);
-    const btn = document.getElementById(`tab-${name}`);
-    if (!panel || !btn) return;
-    const isActive = name === tabName;
-    panel.classList.toggle("active", isActive);
-    btn.setAttribute("aria-selected", isActive ? "true" : "false");
-  });
-
-  if (updateHash !== false) {
-  if (tabName === "home") {
-    history.pushState(null, "", window.location.pathname + window.location.search);
-  } else if (window.location.hash !== `#${tabName}`) {
-    history.pushState(null, "", `#${tabName}`);
-  }
-}
-}
-
-function initTabs() {
-  const nav = document.getElementById("tabNav");
-  nav.addEventListener("click", (e) => {
-    const btn = e.target.closest(".tab-btn");
-    if (!btn) return;
-    activateTab(btn.dataset.tab, true);
-  });
-
-  nav.addEventListener("keydown", (e) => {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-    const buttons = Array.from(nav.querySelectorAll(".tab-btn"));
-    const currentIndex = buttons.findIndex(b => b.getAttribute("aria-selected") === "true");
-    let nextIndex = e.key === "ArrowRight" ? currentIndex + 1 : currentIndex - 1;
-    if (nextIndex < 0) nextIndex = buttons.length - 1;
-    if (nextIndex >= buttons.length) nextIndex = 0;
-    buttons[nextIndex].focus();
-    activateTab(buttons[nextIndex].dataset.tab, true);
-  });
-
-  window.addEventListener("hashchange", () => {
-    const tabName = window.location.hash.replace("#", "");
-    activateTab(tabName, false);
-  });
-
-const hash = window.location.hash.replace("#", "");
-
-if (hash && VALID_TABS.includes(hash)) {
-  activateTab(hash, false);
-} else {
-  activateTab("home", false);
-  history.replaceState(null, "", window.location.pathname + window.location.search);
-}
-}
-
-/* ---------- Data fetching (unchanged behaviour) ---------- */
-
-async function loadDashboard() {
-  try {
-    const res = await fetch(`${API_BASE}/api/dashboard`, { cache: "no-store" });
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || "unknown error");
-    render(data);
-  } catch (err) {
-    document.getElementById("updatedText").textContent = "Failed to load data — " + err.message;
-    document.getElementById("updatedBanner").classList.add("stale");
-  }
-}
-
-function render(data) {
-  const { clan, members, war, attacks, updated_at, history: historyEvents } = data;
-
-  if (clan) {
-    document.getElementById("clanName").textContent = clan.name || "United";
-    document.getElementById("clanTag").textContent = clan.tag || "";
-    document.getElementById("statLevel").textContent = clan.clan_level ?? "—";
-    document.getElementById("statMembers").textContent = clan.members ?? members.length ?? "—";
-    document.getElementById("statPoints").textContent = clan.clan_points ?? "—";
-    document.getElementById("statWinStreak").textContent = clan.war_win_streak ?? "—";
-  }
-
-  const ago = timeAgo(updated_at);
-  const banner = document.getElementById("updatedBanner");
-  const text = document.getElementById("updatedText");
-  if (ago) {
-    text.textContent = `Data last updated ${ago}`;
-    const staleMins = (Date.now() - new Date(updated_at).getTime()) / 60000;
-    banner.classList.toggle("stale", staleMins > 60);
-  } else {
-    text.textContent = "No data collected yet";
-    banner.classList.add("stale");
-  }
-
-  const warBadge = document.getElementById("warBadge");
-  const warMeta = document.getElementById("warMeta");
-  const scoreBoard = document.getElementById("scoreBoard");
-  const warEmpty = document.getElementById("warEmpty");
-
-  if (war && war.state) {
-    warBadge.textContent = WAR_LABELS[war.state] || war.state;
-    warBadge.className = "war-badge " + war.state;
-    warMeta.textContent = war.team_size ? `${war.team_size} vs ${war.team_size}` : "";
-
-    if (war.state !== "notInWar") {
-      scoreBoard.style.display = "grid";
-      warEmpty.style.display = "none";
-      document.getElementById("usName").textContent = clan?.name || "United";
-      document.getElementById("usStars").textContent = `${war.clan_stars ?? 0} ★`;
-      document.getElementById("usDestro").textContent = `${(war.clan_destruction ?? 0).toFixed ? war.clan_destruction.toFixed(1) : war.clan_destruction}%`;
-      document.getElementById("oppName").textContent = war.opponent_name || "Opponent";
-      document.getElementById("oppStars").textContent = `${war.opponent_stars ?? 0} ★`;
-      document.getElementById("oppDestro").textContent = `${(war.opponent_destruction ?? 0).toFixed ? war.opponent_destruction.toFixed(1) : war.opponent_destruction}%`;
-    } else {
-      scoreBoard.style.display = "none";
-      warEmpty.style.display = "block";
+    function roleClass(role) {
+      if (!role) return "";
+      const r = role.toLowerCase();
+      if (r === "leader") return "leader";
+      if (r === "coleader" || r === "co-leader") return "coleader";
+      return "";
     }
-  } else {
-    warBadge.textContent = "No war data";
-    warBadge.className = "war-badge unknown";
-    scoreBoard.style.display = "none";
-    warEmpty.style.display = "block";
-  }
 
-  const attacksBody = document.getElementById("attacksBody");
-  const attacksEmpty = document.getElementById("attacksEmpty");
-  attacksBody.innerHTML = "";
-  if (attacks && attacks.length) {
-    attacksEmpty.style.display = "none";
-    attacks.forEach(a => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
+    function roleLabel(role) {
+      if (!role) return "—";
+      const map = { leader: "Leader", coLeader: "Co-leader", coleader: "Co-leader", admin: "Elder", elder: "Elder", member: "Member" };
+      return map[role] || role;
+    }
+
+    function timeAgo(iso) {
+      if (!iso) return null;
+      const diffMs = Date.now() - new Date(iso).getTime();
+      const mins = Math.floor(diffMs / 60000);
+      if (mins < 1) return "just now";
+      if (mins < 60) return `${mins} min ago`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return `${hrs} hr${hrs > 1 ? "s" : ""} ago`;
+      const days = Math.floor(hrs / 24);
+      return `${days} day${days > 1 ? "s" : ""} ago`;
+    }
+
+    function formatHistoryDate(iso) {
+      if (!iso) return "—";
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return "—";
+      return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+    }
+
+    /* ---------- Tab navigation ---------- */
+
+    function activateTab(tabName, updateHash) {
+      if (!VALID_TABS.includes(tabName)) tabName = "home";
+
+      VALID_TABS.forEach(name => {
+        const panel = document.getElementById(`panel-${name}`);
+        const btn = document.getElementById(`tab-${name}`);
+        if (!panel || !btn) return;
+        const isActive = name === tabName;
+        panel.classList.toggle("active", isActive);
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+
+      if (updateHash !== false) {
+        if (tabName === "home") {
+          history.pushState(null, "", window.location.pathname + window.location.search);
+        } else if (window.location.hash !== `#${tabName}`) {
+          history.pushState(null, "", `#${tabName}`);
+        }
+      }
+    }
+
+    function initTabs() {
+      const nav = document.getElementById("tabNav");
+      nav.addEventListener("click", (e) => {
+        const btn = e.target.closest(".tab-btn");
+        if (!btn) return;
+        activateTab(btn.dataset.tab, true);
+      });
+
+      nav.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        const buttons = Array.from(nav.querySelectorAll(".tab-btn"));
+        const currentIndex = buttons.findIndex(b => b.getAttribute("aria-selected") === "true");
+        let nextIndex = e.key === "ArrowRight" ? currentIndex + 1 : currentIndex - 1;
+        if (nextIndex < 0) nextIndex = buttons.length - 1;
+        if (nextIndex >= buttons.length) nextIndex = 0;
+        buttons[nextIndex].focus();
+        activateTab(buttons[nextIndex].dataset.tab, true);
+      });
+
+      window.addEventListener("hashchange", () => {
+        const tabName = window.location.hash.replace("#", "");
+        activateTab(tabName, false);
+      });
+
+      const hash = window.location.hash.replace("#", "");
+
+      if (hash && VALID_TABS.includes(hash)) {
+        activateTab(hash, false);
+      } else {
+        activateTab("home", false);
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+    }
+
+    /* ---------- Data fetching (unchanged behaviour) ---------- */
+
+    async function loadDashboard() {
+      try {
+        const res = await fetch(`${API_BASE}/api/dashboard`, { cache: "no-store" });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "unknown error");
+        render(data);
+      } catch (err) {
+        document.getElementById("updatedText").textContent = "Failed to load data — " + err.message;
+        document.getElementById("updatedBanner").classList.add("stale");
+      }
+    }
+
+    function render(data) {
+      const { clan, members, war, attacks, updated_at, history: historyEvents } = data;
+
+      if (clan) {
+        document.getElementById("clanName").textContent = clan.name || "United";
+        document.getElementById("clanTag").textContent = clan.tag || "";
+        document.getElementById("statLevel").textContent = clan.clan_level ?? "—";
+        document.getElementById("statMembers").textContent = clan.members ?? members.length ?? "—";
+        document.getElementById("statPoints").textContent = clan.clan_points ?? "—";
+        document.getElementById("statWinStreak").textContent = clan.war_win_streak ?? "—";
+      }
+
+      const ago = timeAgo(updated_at);
+      const banner = document.getElementById("updatedBanner");
+      const text = document.getElementById("updatedText");
+      if (ago) {
+        text.textContent = `Data last updated ${ago}`;
+        const staleMins = (Date.now() - new Date(updated_at).getTime()) / 60000;
+        banner.classList.toggle("stale", staleMins > 60);
+      } else {
+        text.textContent = "No data collected yet";
+        banner.classList.add("stale");
+      }
+
+      const warBadge = document.getElementById("warBadge");
+      const warMeta = document.getElementById("warMeta");
+      const scoreBoard = document.getElementById("scoreBoard");
+      const warEmpty = document.getElementById("warEmpty");
+
+      if (war && war.state) {
+        warBadge.textContent = WAR_LABELS[war.state] || war.state;
+        warBadge.className = "war-badge " + war.state;
+        warMeta.textContent = war.team_size ? `${war.team_size} vs ${war.team_size}` : "";
+
+        if (war.state !== "notInWar") {
+          scoreBoard.style.display = "grid";
+          warEmpty.style.display = "none";
+          document.getElementById("usName").textContent = clan?.name || "United";
+          document.getElementById("usStars").textContent = `${war.clan_stars ?? 0} ★`;
+          document.getElementById("usDestro").textContent = `${(war.clan_destruction ?? 0).toFixed ? war.clan_destruction.toFixed(1) : war.clan_destruction}%`;
+          document.getElementById("oppName").textContent = war.opponent_name || "Opponent";
+          document.getElementById("oppStars").textContent = `${war.opponent_stars ?? 0} ★`;
+          document.getElementById("oppDestro").textContent = `${(war.opponent_destruction ?? 0).toFixed ? war.opponent_destruction.toFixed(1) : war.opponent_destruction}%`;
+        } else {
+          scoreBoard.style.display = "none";
+          warEmpty.style.display = "block";
+        }
+      } else {
+        warBadge.textContent = "No war data";
+        warBadge.className = "war-badge unknown";
+        scoreBoard.style.display = "none";
+        warEmpty.style.display = "block";
+      }
+
+      const attacksBody = document.getElementById("attacksBody");
+      const attacksEmpty = document.getElementById("attacksEmpty");
+      attacksBody.innerHTML = "";
+      if (attacks && attacks.length) {
+        attacksEmpty.style.display = "none";
+        attacks.forEach(a => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
         <td>${a.attacker_name || a.attacker_tag || "—"}</td>
         <td>${a.defender_tag || "—"}</td>
         <td class="num">${a.stars ?? 0} ★</td>
         <td class="num">${a.destruction_percentage ?? 0}%</td>
       `;
-      attacksBody.appendChild(tr);
-    });
-  } else {
-    attacksEmpty.style.display = "block";
-  }
+          attacksBody.appendChild(tr);
+        });
+      } else {
+        attacksEmpty.style.display = "block";
+      }
 
-  const membersBody = document.getElementById("membersBody");
-  const membersEmpty = document.getElementById("membersEmpty");
-  membersBody.innerHTML = "";
-  if (members && members.length) {
-    membersEmpty.style.display = "none";
-    members.forEach(m => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
+      const membersBody = document.getElementById("membersBody");
+      const membersEmpty = document.getElementById("membersEmpty");
+      membersBody.innerHTML = "";
+      if (members && members.length) {
+        membersEmpty.style.display = "none";
+        members.forEach(m => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
         <td>${m.clan_rank ?? "—"}</td>
         <td>${m.name || "—"}</td>
         <td><span class="role-badge ${roleClass(m.role)}">${roleLabel(m.role)}</span></td>
@@ -701,35 +993,36 @@ function render(data) {
         <td class="num">${m.donations ?? 0}</td>
         <td class="num">${m.donations_received ?? 0}</td>
       `;
-      membersBody.appendChild(tr);
-    });
-  } else {
-    membersEmpty.style.display = "block";
-  }
+          membersBody.appendChild(tr);
+        });
+      } else {
+        membersEmpty.style.display = "block";
+      }
 
-  const historyTimeline = document.getElementById("historyTimeline");
-  const historyEmpty = document.getElementById("historyEmpty");
-  historyTimeline.innerHTML = "";
-  if (historyEvents && historyEvents.length) {
-    historyEmpty.style.display = "none";
-    historyEvents.forEach(ev => {
-      const item = document.createElement("div");
-      item.className = "timeline-item";
-      item.innerHTML = `
+      const historyTimeline = document.getElementById("historyTimeline");
+      const historyEmpty = document.getElementById("historyEmpty");
+      historyTimeline.innerHTML = "";
+      if (historyEvents && historyEvents.length) {
+        historyEmpty.style.display = "none";
+        historyEvents.forEach(ev => {
+          const item = document.createElement("div");
+          item.className = "timeline-item";
+          item.innerHTML = `
         <div class="timeline-date">${formatHistoryDate(ev.event_time)}</div>
         <div class="timeline-title">${ev.title || "—"}</div>
         ${ev.description ? `<div class="timeline-desc">${ev.description}</div>` : ""}
       `;
-      historyTimeline.appendChild(item);
-    });
-  } else {
-    historyEmpty.style.display = "block";
-  }
-}
+          historyTimeline.appendChild(item);
+        });
+      } else {
+        historyEmpty.style.display = "block";
+      }
+    }
 
-initTabs();
-loadDashboard();
-setInterval(loadDashboard, 60000);
-</script>
+    initTabs();
+    loadDashboard();
+    setInterval(loadDashboard, 60000);
+  </script>
 </body>
+
 </html>
