@@ -313,6 +313,22 @@
       font-weight: 700;
     }
 
+    .attack-section {
+      margin-top: 22px;
+    }
+
+    .attack-section:first-child {
+      margin-top: 0;
+    }
+
+    .attack-section h3 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      margin: 0 0 10px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -547,6 +563,16 @@
 
     .cwl-current {
       border-left: 3px solid var(--accent);
+    }
+
+    .cwl-diagnostic {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--text-dim);
+      font-size: 12px;
+      display: none;
     }
 
     footer {
@@ -821,22 +847,49 @@
       <section>
         <h2>War attacks</h2>
 
-        <div class="table-scroll">
-          <table id="attacksTable">
-            <thead>
-              <tr>
-                <th>Attacker</th>
-                <th>Defender</th>
-                <th class="num">Stars</th>
-                <th class="num">Destruction</th>
-              </tr>
-            </thead>
+        <div class="attack-section">
+          <h3>United attacks</h3>
 
-            <tbody id="attacksBody"></tbody>
-          </table>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Attacker</th>
+                  <th>Defender</th>
+                  <th class="num">Stars</th>
+                  <th class="num">Destruction</th>
+                </tr>
+              </thead>
 
-          <div class="empty-state" id="attacksEmpty" style="display:none;">
-            No attacks recorded yet.
+              <tbody id="ourAttacksBody"></tbody>
+            </table>
+
+            <div class="empty-state" id="ourAttacksEmpty" style="display:none;">
+              No United attacks recorded yet.
+            </div>
+          </div>
+        </div>
+
+        <div class="attack-section">
+          <h3>Opponent attacks</h3>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Attacker</th>
+                  <th>Defender</th>
+                  <th class="num">Stars</th>
+                  <th class="num">Destruction</th>
+                </tr>
+              </thead>
+
+              <tbody id="opponentAttacksBody"></tbody>
+            </table>
+
+            <div class="empty-state" id="opponentAttacksEmpty" style="display:none;">
+              No opponent attacks recorded yet.
+            </div>
           </div>
         </div>
       </section>
@@ -888,6 +941,8 @@
             </div>
 
           </div>
+
+          <div class="cwl-diagnostic" id="cwlDiagnostic"></div>
 
         </div>
       </section>
@@ -1330,6 +1385,41 @@
       }
     }
 
+    function renderAttackTable(
+      attacks,
+      bodyId,
+      emptyId
+    ) {
+      const body =
+        document.getElementById(bodyId);
+
+      const empty =
+        document.getElementById(emptyId);
+
+      body.innerHTML = "";
+
+      if (attacks && attacks.length) {
+        empty.style.display = "none";
+
+        attacks.forEach(a => {
+          const tr =
+            document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${a.attacker_name || a.attacker_tag || "—"}</td>
+            <td>${a.defender_name || a.defender_tag || "—"}</td>
+            <td class="num">${a.stars ?? 0} ★</td>
+            <td class="num">${a.destruction_percentage ?? 0}%</td>
+          `;
+
+          body.appendChild(tr);
+        });
+
+      } else {
+        empty.style.display = "block";
+      }
+    }
+
     function renderCwl(cwl) {
       const unavailable =
         document.getElementById(
@@ -1371,9 +1461,16 @@
           "cwlAttacksEmpty"
         );
 
+      const diagnostic =
+        document.getElementById(
+          "cwlDiagnostic"
+        );
+
       standingsBody.innerHTML = "";
       warsBody.innerHTML = "";
       attacksBody.innerHTML = "";
+      diagnostic.textContent = "";
+      diagnostic.style.display = "none";
 
       if (!cwl || !cwl.available) {
         content.style.display = "none";
@@ -1406,7 +1503,7 @@
         document.getElementById(
           "cwlStars"
         ).textContent =
-          cwl.ourStanding.stars;
+          cwl.ourStanding.stars ?? 0;
 
         document.getElementById(
           "cwlDestruction"
@@ -1418,12 +1515,12 @@
         document.getElementById(
           "cwlWarsPlayed"
         ).textContent =
-          cwl.ourStanding.warsPlayed;
+          cwl.ourStanding.warsPlayed ?? 0;
 
         document.getElementById(
           "cwlRecord"
         ).textContent =
-          `${cwl.ourStanding.wins}–${cwl.ourStanding.losses}`;
+          `${cwl.ourStanding.wins ?? 0}–${cwl.ourStanding.losses ?? 0}`;
       } else {
         document.getElementById(
           "cwlPosition"
@@ -1474,6 +1571,7 @@
 
           standingsBody.appendChild(tr);
         });
+
       } else {
         standingsEmpty.style.display =
           "block";
@@ -1482,7 +1580,8 @@
       const wars =
         [...(cwl.wars || [])].sort(
           (a, b) =>
-            a.round - b.round
+            (a.round ?? 0) -
+            (b.round ?? 0)
         );
 
       if (wars.length) {
@@ -1494,7 +1593,7 @@
             document.createElement("tr");
 
           tr.innerHTML = `
-            <td>${war.round}</td>
+            <td>${war.round ?? "—"}</td>
             <td>${war.opponentName || "—"}</td>
             <td class="${cwlResultClass(war.result)}">
               ${war.result || "—"}
@@ -1508,6 +1607,7 @@
 
           warsBody.appendChild(tr);
         });
+
       } else {
         warsEmpty.style.display =
           "block";
@@ -1516,8 +1616,14 @@
       const cwlAttacks =
         [...(cwl.attacks || [])].sort(
           (a, b) => {
-            if (a.round !== b.round) {
-              return a.round - b.round;
+            if (
+              (a.round ?? 0) !==
+              (b.round ?? 0)
+            ) {
+              return (
+                (a.round ?? 0) -
+                (b.round ?? 0)
+              );
             }
 
             return (
@@ -1536,9 +1642,9 @@
             document.createElement("tr");
 
           tr.innerHTML = `
-            <td>${attack.round}</td>
+            <td>${attack.round ?? "—"}</td>
             <td>${attack.playerName || "—"}</td>
-            <td>${attack.targetTag || "—"}</td>
+            <td>${attack.targetName || attack.targetTag || "—"}</td>
             <td class="num">${attack.stars ?? 0}</td>
             <td class="num">
               ${formatPercent(attack.destruction)}
@@ -1547,8 +1653,17 @@
 
           attacksBody.appendChild(tr);
         });
+
       } else {
         attacksEmpty.style.display =
+          "block";
+      }
+
+      if (cwl.diagnostic) {
+        diagnostic.textContent =
+          cwl.diagnostic;
+
+        diagnostic.style.display =
           "block";
       }
     }
@@ -1584,7 +1699,7 @@
           "statMembers"
         ).textContent =
           clan.members ??
-          members.length ??
+          members?.length ??
           "—";
 
         document.getElementById(
@@ -1736,42 +1851,49 @@
           "block";
       }
 
-      const attacksBody =
-        document.getElementById(
-          "attacksBody"
-        );
+      /*
+       * The Worker can provide:
+       *
+       * attacks.our
+       * attacks.opponent
+       *
+       * For compatibility with the previous Worker, if only a flat
+       * attacks array exists, it is treated as United attacks.
+       */
+      let ourAttacks = [];
+      let opponentAttacks = [];
 
-      const attacksEmpty =
-        document.getElementById(
-          "attacksEmpty"
-        );
+      if (attacks) {
+        if (
+          Array.isArray(attacks.our) ||
+          Array.isArray(attacks.opponent)
+        ) {
+          ourAttacks =
+            Array.isArray(attacks.our)
+              ? attacks.our
+              : [];
 
-      attacksBody.innerHTML = "";
+          opponentAttacks =
+            Array.isArray(attacks.opponent)
+              ? attacks.opponent
+              : [];
 
-      if (
-        attacks &&
-        attacks.length
-      ) {
-        attacksEmpty.style.display =
-          "none";
-
-        attacks.forEach(a => {
-          const tr =
-            document.createElement("tr");
-
-          tr.innerHTML = `
-            <td>${a.attacker_name || a.attacker_tag || "—"}</td>
-            <td>${a.defender_tag || "—"}</td>
-            <td class="num">${a.stars ?? 0} ★</td>
-            <td class="num">${a.destruction_percentage ?? 0}%</td>
-          `;
-
-          attacksBody.appendChild(tr);
-        });
-      } else {
-        attacksEmpty.style.display =
-          "block";
+        } else if (Array.isArray(attacks)) {
+          ourAttacks = attacks;
+        }
       }
+
+      renderAttackTable(
+        ourAttacks,
+        "ourAttacksBody",
+        "ourAttacksEmpty"
+      );
+
+      renderAttackTable(
+        opponentAttacks,
+        "opponentAttacksBody",
+        "opponentAttacksEmpty"
+      );
 
       const membersBody =
         document.getElementById(
@@ -1812,6 +1934,7 @@
 
           membersBody.appendChild(tr);
         });
+
       } else {
         membersEmpty.style.display =
           "block";
