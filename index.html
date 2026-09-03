@@ -660,11 +660,10 @@
         });
       } else { attacksEmpty.style.display = "block"; }
 
-      if (cwl.diagnostic) {
-        // Stringify the diagnostic object so it formats correctly instead of rendering [object Object]
-        diagnostic.textContent = typeof cwl.diagnostic === "object" ? JSON.stringify(cwl.diagnostic, null, 2) : cwl.diagnostic;
-        diagnostic.style.display = "block";
-      }
+if (cwl.diagnostic) {
+  diagnostic.textContent = "";
+  diagnostic.style.display = "none";
+}
     }
 
     function renderCwlHistory(historyData, currentSeasonString) {
