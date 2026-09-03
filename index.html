@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>United — Clan Dashboard</title>
+
   <style>
     :root {
       --bg: #0f1420;
@@ -136,7 +137,6 @@
       background: #d99b3f;
     }
 
-    /* Tab navigation */
     nav.tab-nav {
       display: flex;
       gap: 4px;
@@ -393,7 +393,6 @@
       color: var(--text-dim);
     }
 
-    /* Timeline (Clan History) */
     .timeline {
       position: relative;
       margin: 10px 0 0;
@@ -454,7 +453,6 @@
       line-height: 1.55;
     }
 
-    /* Capital milestone cards */
     .milestone-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -499,6 +497,56 @@
       color: var(--text-dim);
       border-top: 1px dashed var(--border);
       padding-top: 12px;
+    }
+
+    .cwl-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .cwl-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .cwl-card .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .cwl-card .value {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--accent-2);
+    }
+
+    .cwl-card.highlight .value {
+      color: var(--accent);
+    }
+
+    .cwl-result-win {
+      color: var(--win);
+      font-weight: 700;
+    }
+
+    .cwl-result-loss {
+      color: var(--lose);
+      font-weight: 700;
+    }
+
+    .cwl-result-tie {
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+
+    .cwl-current {
+      border-left: 3px solid var(--accent);
     }
 
     footer {
@@ -571,6 +619,7 @@
       }
     }
   </style>
+
   <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 
@@ -585,19 +634,23 @@
           <div class="tag" id="clanTag">#2U0PYRUU2</div>
         </div>
       </div>
+
       <div class="stat-row" id="statRow">
         <div class="stat-pill">
           <div class="v" id="statLevel">—</div>
           <div class="l">Level</div>
         </div>
+
         <div class="stat-pill">
           <div class="v" id="statMembers">—</div>
           <div class="l">Members</div>
         </div>
+
         <div class="stat-pill">
           <div class="v" id="statPoints">—</div>
           <div class="l">Points</div>
         </div>
+
         <div class="stat-pill">
           <div class="v" id="statWinStreak">—</div>
           <div class="l">Win streak</div>
@@ -605,67 +658,109 @@
       </div>
     </header>
 
-
     <nav class="tab-nav" role="tablist" aria-label="Dashboard sections" id="tabNav">
-      <button class="tab-btn" role="tab" data-tab="home" aria-selected="false" aria-controls="panel-home"
-        id="tab-home">Home</button>
-      <button class="tab-btn" role="tab" data-tab="history" aria-selected="true" aria-controls="panel-history"
-        id="tab-history">Clan History</button>
-      <button class="tab-btn" role="tab" data-tab="members" aria-selected="false" aria-controls="panel-members"
-        id="tab-members">Members</button>
-      <button class="tab-btn" role="tab" data-tab="war" aria-selected="false" aria-controls="panel-war"
-        id="tab-war">War</button>
-      <button class="tab-btn" role="tab" data-tab="capital" aria-selected="false" aria-controls="panel-capital"
-        id="tab-capital">Capital</button>
-      <!-- CWL tab hidden for now. Restore this button to re-enable the CWL tab. -->
-      <!--
-    <button class="tab-btn" role="tab" data-tab="cwl" aria-selected="false" aria-controls="panel-cwl" id="tab-cwl">CWL</button>
-    -->
+      <button class="tab-btn" role="tab" data-tab="home" aria-selected="false"
+        aria-controls="panel-home" id="tab-home">Home</button>
+
+      <button class="tab-btn" role="tab" data-tab="history" aria-selected="true"
+        aria-controls="panel-history" id="tab-history">Clan History</button>
+
+      <button class="tab-btn" role="tab" data-tab="members" aria-selected="false"
+        aria-controls="panel-members" id="tab-members">Members</button>
+
+      <button class="tab-btn" role="tab" data-tab="war" aria-selected="false"
+        aria-controls="panel-war" id="tab-war">War</button>
+
+      <button class="tab-btn" role="tab" data-tab="cwl" aria-selected="false"
+        aria-controls="panel-cwl" id="tab-cwl">CWL</button>
+
+      <button class="tab-btn" role="tab" data-tab="capital" aria-selected="false"
+        aria-controls="panel-capital" id="tab-capital">Capital</button>
     </nav>
 
     <!-- CLAN HISTORY -->
-    <div class="tab-panel active" id="panel-history" role="tabpanel" aria-labelledby="tab-history">
+    <div class="tab-panel active" id="panel-history" role="tabpanel"
+      aria-labelledby="tab-history">
+
       <section>
         <h2>Clan History</h2>
+
         <div class="timeline" id="historyTimeline"></div>
-        <div class="empty-state" id="historyEmpty" style="display:none;">No history recorded yet.</div>
+
+        <div class="empty-state" id="historyEmpty" style="display:none;">
+          No history recorded yet.
+        </div>
       </section>
     </div>
 
     <!-- HOME -->
-    <div class="tab-panel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
+    <div class="tab-panel" id="panel-home" role="tabpanel"
+      aria-labelledby="tab-home">
+
       <section>
         <h2>Welcome!</h2>
-        <p><strong>Clan creation date:</strong> Friday, 7 August 2026</p>
+
+        <p>
+          <strong>Clan creation date:</strong>
+          Friday, 7 August 2026
+        </p>
 
         <div class="clan-banner">
-          <img src="/assets/images/united-clan-banner-2026-08-21.jpeg" alt="United Clan banner, 21 August 2026">
-          <div class="clan-banner-caption">United Clan banner · 21 August 2026</div>
+          <img
+            src="/assets/images/united-clan-banner-2026-08-21.jpeg"
+            alt="United Clan banner, 21 August 2026">
+          <div class="clan-banner-caption">
+            United Clan banner · 21 August 2026
+          </div>
         </div>
-        <p>The clan was created by Boss_Hoss and Tito on the date above. Both of them played together in a clan named
-          <em>Clan for Wars</em> in late 2025 and early 2026. The clan was discontinued in July 2026, as its leader and
-          co-leaders became busy with university studies and preparation for competitive examinations.</p>
-        <p>This resulted in the other members of Clan for Wars having to find new clans. After some gradual hopping
-          between clans, Tito proposed to Boss_Hoss that they find a place where they could settle, and this clan was
-          formed.</p>
 
+        <p>
+          The clan was created by Boss_Hoss and Tito on the date above.
+          Both of them played together in a clan named
+          <em>Clan for Wars</em> in late 2025 and early 2026.
+          The clan was discontinued in July 2026, as its leader and
+          co-leaders became busy with university studies and preparation
+          for competitive examinations.
+        </p>
+
+        <p>
+          This resulted in the other members of Clan for Wars having to
+          find new clans. After some gradual hopping between clans,
+          Tito proposed to Boss_Hoss that they find a place where they
+          could settle, and this clan was formed.
+        </p>
 
         <h2>Initial days</h2>
-        <p>Initially, we tried to get members into the clan. Our good old friend Ankan joined the clan. We regularly
-          posted Clan Notices to attract new players.</p>
+
+        <p>
+          Initially, we tried to get members into the clan.
+          Our good old friend Ankan joined the clan.
+          We regularly posted Clan Notices to attract new players.
+        </p>
 
         <h2>Clan Rules</h2>
-        <p>Initially, all members, regardless of Town Hall level, are given the Elder role. This requirement will
-          gradually change as the clan develops.</p>
-        <p>The Co-leader role is currently reserved for the main accounts of the founding members, Boss_Hoss and Tito,
-          and our good old friend Ankan.</p>
+
+        <p>
+          Initially, all members, regardless of Town Hall level, are
+          given the Elder role. This requirement will gradually change
+          as the clan develops.
+        </p>
+
+        <p>
+          The Co-leader role is currently reserved for the main accounts
+          of the founding members, Boss_Hoss and Tito, and our good old
+          friend Ankan.
+        </p>
       </section>
     </div>
 
     <!-- MEMBERS -->
-    <div class="tab-panel" id="panel-members" role="tabpanel" aria-labelledby="tab-members">
+    <div class="tab-panel" id="panel-members" role="tabpanel"
+      aria-labelledby="tab-members">
+
       <section>
         <h2>Members</h2>
+
         <div class="table-scroll">
           <table id="membersTable">
             <thead>
@@ -679,39 +774,53 @@
                 <th class="num">Received</th>
               </tr>
             </thead>
+
             <tbody id="membersBody"></tbody>
           </table>
-          <div class="empty-state" id="membersEmpty" style="display:none;">No member data yet.</div>
+
+          <div class="empty-state" id="membersEmpty" style="display:none;">
+            No member data yet.
+          </div>
         </div>
       </section>
     </div>
 
     <!-- WAR -->
-    <div class="tab-panel" id="panel-war" role="tabpanel" aria-labelledby="tab-war">
+    <div class="tab-panel" id="panel-war" role="tabpanel"
+      aria-labelledby="tab-war">
+
       <section>
         <h2>Current war</h2>
+
         <div class="war-status">
           <span class="war-badge unknown" id="warBadge">Loading</span>
           <div id="warMeta" style="color:var(--text-dim); font-size:13px;"></div>
         </div>
+
         <div class="score-board" id="scoreBoard" style="display:none;">
           <div class="score-side">
             <div class="name" id="usName">United</div>
             <div class="stars" id="usStars">0 ★</div>
             <div class="destro" id="usDestro">0%</div>
           </div>
+
           <div class="vs">VS</div>
+
           <div class="score-side">
             <div class="name" id="oppName">Opponent</div>
             <div class="stars" id="oppStars">0 ★</div>
             <div class="destro" id="oppDestro">0%</div>
           </div>
         </div>
-        <div class="empty-state" id="warEmpty" style="display:none;">Not in war right now.</div>
+
+        <div class="empty-state" id="warEmpty" style="display:none;">
+          Not in war right now.
+        </div>
       </section>
 
       <section>
         <h2>War attacks</h2>
+
         <div class="table-scroll">
           <table id="attacksTable">
             <thead>
@@ -722,306 +831,1058 @@
                 <th class="num">Destruction</th>
               </tr>
             </thead>
+
             <tbody id="attacksBody"></tbody>
           </table>
-          <div class="empty-state" id="attacksEmpty" style="display:none;">No attacks recorded yet.</div>
+
+          <div class="empty-state" id="attacksEmpty" style="display:none;">
+            No attacks recorded yet.
+          </div>
         </div>
       </section>
     </div>
 
+    <!-- CWL -->
+    <div class="tab-panel" id="panel-cwl" role="tabpanel"
+      aria-labelledby="tab-cwl">
+
+      <section>
+        <h2>Clan War League</h2>
+
+        <div id="cwlUnavailable" class="empty-state" style="display:none;">
+          CWL data is not currently available.
+        </div>
+
+        <div id="cwlContent">
+
+          <div class="cwl-overview">
+
+            <div class="cwl-card highlight">
+              <div class="label">League</div>
+              <div class="value" id="cwlLeague">—</div>
+            </div>
+
+            <div class="cwl-card">
+              <div class="label">Position</div>
+              <div class="value" id="cwlPosition">—</div>
+            </div>
+
+            <div class="cwl-card">
+              <div class="label">Stars</div>
+              <div class="value" id="cwlStars">—</div>
+            </div>
+
+            <div class="cwl-card">
+              <div class="label">Destruction</div>
+              <div class="value" id="cwlDestruction">—</div>
+            </div>
+
+            <div class="cwl-card">
+              <div class="label">Wars</div>
+              <div class="value" id="cwlWarsPlayed">—</div>
+            </div>
+
+            <div class="cwl-card">
+              <div class="label">Record</div>
+              <div class="value" id="cwlRecord">—</div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <h2>Standings</h2>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Clan</th>
+                <th class="num">Stars</th>
+                <th class="num">Destruction</th>
+                <th class="num">W</th>
+                <th class="num">L</th>
+              </tr>
+            </thead>
+
+            <tbody id="cwlStandingsBody"></tbody>
+          </table>
+
+          <div class="empty-state" id="cwlStandingsEmpty" style="display:none;">
+            No standings available.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>CWL Wars</h2>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Round</th>
+                <th>Opponent</th>
+                <th>Result</th>
+                <th class="num">United</th>
+                <th class="num">Opponent</th>
+                <th class="num">Destruction</th>
+              </tr>
+            </thead>
+
+            <tbody id="cwlWarsBody"></tbody>
+          </table>
+
+          <div class="empty-state" id="cwlWarsEmpty" style="display:none;">
+            No CWL wars available yet.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Our attacks</h2>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Round</th>
+                <th>Player</th>
+                <th>Target</th>
+                <th class="num">Stars</th>
+                <th class="num">Destruction</th>
+              </tr>
+            </thead>
+
+            <tbody id="cwlAttacksBody"></tbody>
+          </table>
+
+          <div class="empty-state" id="cwlAttacksEmpty" style="display:none;">
+            No CWL attacks recorded yet.
+          </div>
+        </div>
+      </section>
+
+    </div>
+
     <!-- CAPITAL -->
-    <div class="tab-panel" id="panel-capital" role="tabpanel" aria-labelledby="tab-capital">
+    <div class="tab-panel" id="panel-capital" role="tabpanel"
+      aria-labelledby="tab-capital">
+
       <section>
         <h2>Clan Capital</h2>
+
         <div class="milestone-grid">
+
           <div class="milestone-card">
             <div class="m-label">Capital unlocked</div>
             <div class="m-value">Unlocked</div>
             <div class="m-date">13 August 2026</div>
           </div>
+
           <div class="milestone-card">
             <div class="m-label">Capital level</div>
             <div class="m-value">Level 2</div>
             <div class="m-date">14 August 2026</div>
           </div>
+
           <div class="milestone-card">
             <div class="m-label">Capital level</div>
             <div class="m-value">Level 3</div>
             <div class="m-date">14 August 2026</div>
           </div>
+
           <div class="milestone-card">
             <div class="m-label">District unlocked</div>
             <div class="m-value">Wizard Valley</div>
             <div class="m-date">14 August 2026</div>
           </div>
+
           <div class="milestone-card league">
             <div class="m-label">Capital League</div>
             <div class="m-value">Bronze III</div>
             <div class="m-date">Reached 17 August 2026</div>
           </div>
+
         </div>
-        <p class="future-note">Detailed Capital statistics and Raid Weekend history can be added here once the
-          API/backend is expanded to provide that data.</p>
+
+        <p class="future-note">
+          Detailed Capital statistics and Raid Weekend history can be
+          added here once the API/backend is expanded to provide that data.
+        </p>
       </section>
     </div>
 
-    <!-- CWL panel hidden for now. Restore this block to re-enable the CWL tab. -->
-    <!--
-  <div class="tab-panel" id="panel-cwl" role="tabpanel" aria-labelledby="tab-cwl">
-    <section>
-      <h2>Clan War League</h2>
-      <div class="placeholder-panel">
-        <div class="icon">⚔️</div>
-        <p>Clan War League statistics and history will appear here when CWL data is added to the API.</p>
-      </div>
-    </section>
-  </div>
-  -->
-
     <div class="updated-banner" id="updatedBanner">
-      <span class="dot"></span><span id="updatedText">Loading…</span>
+      <span class="dot"></span>
+      <span id="updatedText">Loading…</span>
     </div>
 
+    <footer>
+      United Clan Dashboard · data via Cloudflare Workers + D1
+    </footer>
 
-    <footer>United Clan Dashboard · data via Cloudflare Workers + D1</footer>
   </div>
 
   <script>
-    const API_BASE = "https://unitedclan-api.trulytito.workers.dev";
+    const API_BASE =
+      "https://unitedclan-api.trulytito.workers.dev";
 
     const WAR_LABELS = {
       inWar: "In War",
       preparation: "Preparation Day",
       warEnded: "War Ended",
-      notInWar: "Not In War",
+      notInWar: "Not In War"
     };
 
-    // "cwl" intentionally excluded while the CWL tab/panel are commented out above.
-    // Restore "cwl" to this list when re-enabling the CWL tab button and panel.
-    const VALID_TABS = ["history", "home", "members", "war", "capital"];
+    const VALID_TABS = [
+      "history",
+      "home",
+      "members",
+      "war",
+      "cwl",
+      "capital"
+    ];
 
     function roleClass(role) {
       if (!role) return "";
+
       const r = role.toLowerCase();
+
       if (r === "leader") return "leader";
       if (r === "coleader" || r === "co-leader") return "coleader";
+
       return "";
     }
 
     function roleLabel(role) {
       if (!role) return "—";
-      const map = { leader: "Leader", coLeader: "Co-leader", coleader: "Co-leader", admin: "Elder", elder: "Elder", member: "Member" };
+
+      const map = {
+        leader: "Leader",
+        coLeader: "Co-leader",
+        coleader: "Co-leader",
+        admin: "Elder",
+        elder: "Elder",
+        member: "Member"
+      };
+
       return map[role] || role;
     }
 
     function timeAgo(iso) {
       if (!iso) return null;
-      const diffMs = Date.now() - new Date(iso).getTime();
-      const mins = Math.floor(diffMs / 60000);
+
+      const diffMs =
+        Date.now() - new Date(iso).getTime();
+
+      const mins =
+        Math.floor(diffMs / 60000);
+
       if (mins < 1) return "just now";
       if (mins < 60) return `${mins} min ago`;
-      const hrs = Math.floor(mins / 60);
-      if (hrs < 24) return `${hrs} hr${hrs > 1 ? "s" : ""} ago`;
-      const days = Math.floor(hrs / 24);
+
+      const hrs =
+        Math.floor(mins / 60);
+
+      if (hrs < 24) {
+        return `${hrs} hr${hrs > 1 ? "s" : ""} ago`;
+      }
+
+      const days =
+        Math.floor(hrs / 24);
+
       return `${days} day${days > 1 ? "s" : ""} ago`;
     }
 
     function formatHistoryDate(iso) {
       if (!iso) return "—";
+
       const d = new Date(iso);
+
       if (isNaN(d.getTime())) return "—";
-      return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+      return d.toLocaleDateString(
+        "en-GB",
+        {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        }
+      );
     }
 
-    /* ---------- Tab navigation ---------- */
+    function formatPercent(value) {
+      if (value === null || value === undefined) {
+        return "—";
+      }
+
+      return `${Number(value).toFixed(1)}%`;
+    }
+
+    function cwlResultClass(result) {
+      if (result === "Win") {
+        return "cwl-result-win";
+      }
+
+      if (result === "Loss") {
+        return "cwl-result-loss";
+      }
+
+      return "cwl-result-tie";
+    }
 
     function activateTab(tabName, updateHash) {
-      if (!VALID_TABS.includes(tabName)) tabName = "home";
+      if (!VALID_TABS.includes(tabName)) {
+        tabName = "home";
+      }
 
       VALID_TABS.forEach(name => {
-        const panel = document.getElementById(`panel-${name}`);
-        const btn = document.getElementById(`tab-${name}`);
+        const panel =
+          document.getElementById(`panel-${name}`);
+
+        const btn =
+          document.getElementById(`tab-${name}`);
+
         if (!panel || !btn) return;
-        const isActive = name === tabName;
-        panel.classList.toggle("active", isActive);
-        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        const isActive =
+          name === tabName;
+
+        panel.classList.toggle(
+          "active",
+          isActive
+        );
+
+        btn.setAttribute(
+          "aria-selected",
+          isActive ? "true" : "false"
+        );
       });
 
       if (updateHash !== false) {
         if (tabName === "home") {
-          history.pushState(null, "", window.location.pathname + window.location.search);
-        } else if (window.location.hash !== `#${tabName}`) {
-          history.pushState(null, "", `#${tabName}`);
+          history.pushState(
+            null,
+            "",
+            window.location.pathname +
+            window.location.search
+          );
+        } else if (
+          window.location.hash !== `#${tabName}`
+        ) {
+          history.pushState(
+            null,
+            "",
+            `#${tabName}`
+          );
         }
       }
     }
 
     function initTabs() {
-      const nav = document.getElementById("tabNav");
-      nav.addEventListener("click", (e) => {
-        const btn = e.target.closest(".tab-btn");
-        if (!btn) return;
-        activateTab(btn.dataset.tab, true);
-      });
+      const nav =
+        document.getElementById("tabNav");
 
-      nav.addEventListener("keydown", (e) => {
-        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-        const buttons = Array.from(nav.querySelectorAll(".tab-btn"));
-        const currentIndex = buttons.findIndex(b => b.getAttribute("aria-selected") === "true");
-        let nextIndex = e.key === "ArrowRight" ? currentIndex + 1 : currentIndex - 1;
-        if (nextIndex < 0) nextIndex = buttons.length - 1;
-        if (nextIndex >= buttons.length) nextIndex = 0;
-        buttons[nextIndex].focus();
-        activateTab(buttons[nextIndex].dataset.tab, true);
-      });
+      nav.addEventListener(
+        "click",
+        (e) => {
+          const btn =
+            e.target.closest(".tab-btn");
 
-      window.addEventListener("hashchange", () => {
-        const tabName = window.location.hash.replace("#", "");
-        activateTab(tabName, false);
-      });
+          if (!btn) return;
 
-      const hash = window.location.hash.replace("#", "");
+          activateTab(
+            btn.dataset.tab,
+            true
+          );
+        }
+      );
 
-      if (hash && VALID_TABS.includes(hash)) {
-        activateTab(hash, false);
+      nav.addEventListener(
+        "keydown",
+        (e) => {
+          if (
+            e.key !== "ArrowRight" &&
+            e.key !== "ArrowLeft"
+          ) {
+            return;
+          }
+
+          const buttons =
+            Array.from(
+              nav.querySelectorAll(".tab-btn")
+            );
+
+          const currentIndex =
+            buttons.findIndex(
+              b =>
+                b.getAttribute(
+                  "aria-selected"
+                ) === "true"
+            );
+
+          let nextIndex =
+            e.key === "ArrowRight"
+              ? currentIndex + 1
+              : currentIndex - 1;
+
+          if (nextIndex < 0) {
+            nextIndex =
+              buttons.length - 1;
+          }
+
+          if (
+            nextIndex >= buttons.length
+          ) {
+            nextIndex = 0;
+          }
+
+          buttons[nextIndex].focus();
+
+          activateTab(
+            buttons[nextIndex].dataset.tab,
+            true
+          );
+        }
+      );
+
+      window.addEventListener(
+        "hashchange",
+        () => {
+          const tabName =
+            window.location.hash.replace(
+              "#",
+              ""
+            );
+
+          activateTab(
+            tabName,
+            false
+          );
+        }
+      );
+
+      const hash =
+        window.location.hash.replace(
+          "#",
+          ""
+        );
+
+      if (
+        hash &&
+        VALID_TABS.includes(hash)
+      ) {
+        activateTab(
+          hash,
+          false
+        );
       } else {
-        activateTab("home", false);
-        history.replaceState(null, "", window.location.pathname + window.location.search);
+        activateTab(
+          "home",
+          false
+        );
+
+        history.replaceState(
+          null,
+          "",
+          window.location.pathname +
+          window.location.search
+        );
       }
     }
 
-    /* ---------- Data fetching (unchanged behaviour) ---------- */
-
     async function loadDashboard() {
       try {
-        const res = await fetch(`${API_BASE}/api/dashboard`, { cache: "no-store" });
-        const data = await res.json();
-        if (!data.ok) throw new Error(data.error || "unknown error");
+        const res =
+          await fetch(
+            `${API_BASE}/api/dashboard`,
+            {
+              cache: "no-store"
+            }
+          );
+
+        const data =
+          await res.json();
+
+        if (!data.ok) {
+          throw new Error(
+            data.error ||
+            "unknown error"
+          );
+        }
+
         render(data);
+
       } catch (err) {
-        document.getElementById("updatedText").textContent = "Failed to load data — " + err.message;
-        document.getElementById("updatedBanner").classList.add("stale");
+        document.getElementById(
+          "updatedText"
+        ).textContent =
+          "Failed to load data — " +
+          err.message;
+
+        document.getElementById(
+          "updatedBanner"
+        ).classList.add("stale");
+      }
+    }
+
+    function renderCwl(cwl) {
+      const unavailable =
+        document.getElementById(
+          "cwlUnavailable"
+        );
+
+      const content =
+        document.getElementById(
+          "cwlContent"
+        );
+
+      const standingsBody =
+        document.getElementById(
+          "cwlStandingsBody"
+        );
+
+      const standingsEmpty =
+        document.getElementById(
+          "cwlStandingsEmpty"
+        );
+
+      const warsBody =
+        document.getElementById(
+          "cwlWarsBody"
+        );
+
+      const warsEmpty =
+        document.getElementById(
+          "cwlWarsEmpty"
+        );
+
+      const attacksBody =
+        document.getElementById(
+          "cwlAttacksBody"
+        );
+
+      const attacksEmpty =
+        document.getElementById(
+          "cwlAttacksEmpty"
+        );
+
+      standingsBody.innerHTML = "";
+      warsBody.innerHTML = "";
+      attacksBody.innerHTML = "";
+
+      if (!cwl || !cwl.available) {
+        content.style.display = "none";
+        unavailable.style.display = "block";
+
+        standingsEmpty.style.display = "block";
+        warsEmpty.style.display = "block";
+        attacksEmpty.style.display = "block";
+
+        return;
+      }
+
+      content.style.display = "block";
+      unavailable.style.display = "none";
+
+      const leagueName =
+        cwl.league?.name ||
+        "Clan War League";
+
+      document.getElementById(
+        "cwlLeague"
+      ).textContent = leagueName;
+
+      if (cwl.ourStanding) {
+        document.getElementById(
+          "cwlPosition"
+        ).textContent =
+          `#${cwl.ourStanding.rank}`;
+
+        document.getElementById(
+          "cwlStars"
+        ).textContent =
+          cwl.ourStanding.stars;
+
+        document.getElementById(
+          "cwlDestruction"
+        ).textContent =
+          formatPercent(
+            cwl.ourStanding.destruction
+          );
+
+        document.getElementById(
+          "cwlWarsPlayed"
+        ).textContent =
+          cwl.ourStanding.warsPlayed;
+
+        document.getElementById(
+          "cwlRecord"
+        ).textContent =
+          `${cwl.ourStanding.wins}–${cwl.ourStanding.losses}`;
+      } else {
+        document.getElementById(
+          "cwlPosition"
+        ).textContent = "—";
+
+        document.getElementById(
+          "cwlStars"
+        ).textContent = "—";
+
+        document.getElementById(
+          "cwlDestruction"
+        ).textContent = "—";
+
+        document.getElementById(
+          "cwlWarsPlayed"
+        ).textContent = "—";
+
+        document.getElementById(
+          "cwlRecord"
+        ).textContent = "—";
+      }
+
+      const standings =
+        cwl.standings || [];
+
+      if (standings.length) {
+        standingsEmpty.style.display =
+          "none";
+
+        standings.forEach(row => {
+          const tr =
+            document.createElement("tr");
+
+          if (row.tag === cwl.clanTag) {
+            tr.classList.add(
+              "cwl-current"
+            );
+          }
+
+          tr.innerHTML = `
+            <td>${row.rank ?? "—"}</td>
+            <td>${row.name || "—"}</td>
+            <td class="num">${row.stars ?? 0}</td>
+            <td class="num">${formatPercent(row.destruction)}</td>
+            <td class="num">${row.wins ?? 0}</td>
+            <td class="num">${row.losses ?? 0}</td>
+          `;
+
+          standingsBody.appendChild(tr);
+        });
+      } else {
+        standingsEmpty.style.display =
+          "block";
+      }
+
+      const wars =
+        [...(cwl.wars || [])].sort(
+          (a, b) =>
+            a.round - b.round
+        );
+
+      if (wars.length) {
+        warsEmpty.style.display =
+          "none";
+
+        wars.forEach(war => {
+          const tr =
+            document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${war.round}</td>
+            <td>${war.opponentName || "—"}</td>
+            <td class="${cwlResultClass(war.result)}">
+              ${war.result || "—"}
+            </td>
+            <td class="num">${war.ourStars ?? 0}</td>
+            <td class="num">${war.opponentStars ?? 0}</td>
+            <td class="num">
+              ${formatPercent(war.ourDestruction)}
+            </td>
+          `;
+
+          warsBody.appendChild(tr);
+        });
+      } else {
+        warsEmpty.style.display =
+          "block";
+      }
+
+      const cwlAttacks =
+        [...(cwl.attacks || [])].sort(
+          (a, b) => {
+            if (a.round !== b.round) {
+              return a.round - b.round;
+            }
+
+            return (
+              (a.attackOrder ?? 0) -
+              (b.attackOrder ?? 0)
+            );
+          }
+        );
+
+      if (cwlAttacks.length) {
+        attacksEmpty.style.display =
+          "none";
+
+        cwlAttacks.forEach(attack => {
+          const tr =
+            document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${attack.round}</td>
+            <td>${attack.playerName || "—"}</td>
+            <td>${attack.targetTag || "—"}</td>
+            <td class="num">${attack.stars ?? 0}</td>
+            <td class="num">
+              ${formatPercent(attack.destruction)}
+            </td>
+          `;
+
+          attacksBody.appendChild(tr);
+        });
+      } else {
+        attacksEmpty.style.display =
+          "block";
       }
     }
 
     function render(data) {
-      const { clan, members, war, attacks, updated_at, history: historyEvents } = data;
+      const {
+        clan,
+        members,
+        war,
+        attacks,
+        updated_at,
+        history: historyEvents,
+        cwl
+      } = data;
 
       if (clan) {
-        document.getElementById("clanName").textContent = clan.name || "United";
-        document.getElementById("clanTag").textContent = clan.tag || "";
-        document.getElementById("statLevel").textContent = clan.clan_level ?? "—";
-        document.getElementById("statMembers").textContent = clan.members ?? members.length ?? "—";
-        document.getElementById("statPoints").textContent = clan.clan_points ?? "—";
-        document.getElementById("statWinStreak").textContent = clan.war_win_streak ?? "—";
+        document.getElementById(
+          "clanName"
+        ).textContent =
+          clan.name || "United";
+
+        document.getElementById(
+          "clanTag"
+        ).textContent =
+          clan.tag || "";
+
+        document.getElementById(
+          "statLevel"
+        ).textContent =
+          clan.clan_level ?? "—";
+
+        document.getElementById(
+          "statMembers"
+        ).textContent =
+          clan.members ??
+          members.length ??
+          "—";
+
+        document.getElementById(
+          "statPoints"
+        ).textContent =
+          clan.clan_points ?? "—";
+
+        document.getElementById(
+          "statWinStreak"
+        ).textContent =
+          clan.war_win_streak ?? "—";
       }
 
-      const ago = timeAgo(updated_at);
-      const banner = document.getElementById("updatedBanner");
-      const text = document.getElementById("updatedText");
+      const ago =
+        timeAgo(updated_at);
+
+      const banner =
+        document.getElementById(
+          "updatedBanner"
+        );
+
+      const text =
+        document.getElementById(
+          "updatedText"
+        );
+
       if (ago) {
-        text.textContent = `Data last updated ${ago}`;
-        const staleMins = (Date.now() - new Date(updated_at).getTime()) / 60000;
-        banner.classList.toggle("stale", staleMins > 60);
+        text.textContent =
+          `Data last updated ${ago}`;
+
+        const staleMins =
+          (
+            Date.now() -
+            new Date(updated_at).getTime()
+          ) / 60000;
+
+        banner.classList.toggle(
+          "stale",
+          staleMins > 60
+        );
       } else {
-        text.textContent = "No data collected yet";
-        banner.classList.add("stale");
+        text.textContent =
+          "No data collected yet";
+
+        banner.classList.add(
+          "stale"
+        );
       }
 
-      const warBadge = document.getElementById("warBadge");
-      const warMeta = document.getElementById("warMeta");
-      const scoreBoard = document.getElementById("scoreBoard");
-      const warEmpty = document.getElementById("warEmpty");
+      const warBadge =
+        document.getElementById(
+          "warBadge"
+        );
+
+      const warMeta =
+        document.getElementById(
+          "warMeta"
+        );
+
+      const scoreBoard =
+        document.getElementById(
+          "scoreBoard"
+        );
+
+      const warEmpty =
+        document.getElementById(
+          "warEmpty"
+        );
 
       if (war && war.state) {
-        warBadge.textContent = WAR_LABELS[war.state] || war.state;
-        warBadge.className = "war-badge " + war.state;
-        warMeta.textContent = war.team_size ? `${war.team_size} vs ${war.team_size}` : "";
+        warBadge.textContent =
+          WAR_LABELS[war.state] ||
+          war.state;
 
-        if (war.state !== "notInWar") {
-          scoreBoard.style.display = "grid";
-          warEmpty.style.display = "none";
-          document.getElementById("usName").textContent = clan?.name || "United";
-          document.getElementById("usStars").textContent = `${war.clan_stars ?? 0} ★`;
-          document.getElementById("usDestro").textContent = `${(war.clan_destruction ?? 0).toFixed ? war.clan_destruction.toFixed(1) : war.clan_destruction}%`;
-          document.getElementById("oppName").textContent = war.opponent_name || "Opponent";
-          document.getElementById("oppStars").textContent = `${war.opponent_stars ?? 0} ★`;
-          document.getElementById("oppDestro").textContent = `${(war.opponent_destruction ?? 0).toFixed ? war.opponent_destruction.toFixed(1) : war.opponent_destruction}%`;
+        warBadge.className =
+          "war-badge " +
+          war.state;
+
+        warMeta.textContent =
+          war.team_size
+            ? `${war.team_size} vs ${war.team_size}`
+            : "";
+
+        if (
+          war.state !==
+          "notInWar"
+        ) {
+          scoreBoard.style.display =
+            "grid";
+
+          warEmpty.style.display =
+            "none";
+
+          document.getElementById(
+            "usName"
+          ).textContent =
+            clan?.name ||
+            "United";
+
+          document.getElementById(
+            "usStars"
+          ).textContent =
+            `${war.clan_stars ?? 0} ★`;
+
+          document.getElementById(
+            "usDestro"
+          ).textContent =
+            `${Number(
+              war.clan_destruction ?? 0
+            ).toFixed(1)}%`;
+
+          document.getElementById(
+            "oppName"
+          ).textContent =
+            war.opponent_name ||
+            "Opponent";
+
+          document.getElementById(
+            "oppStars"
+          ).textContent =
+            `${war.opponent_stars ?? 0} ★`;
+
+          document.getElementById(
+            "oppDestro"
+          ).textContent =
+            `${Number(
+              war.opponent_destruction ?? 0
+            ).toFixed(1)}%`;
+
         } else {
-          scoreBoard.style.display = "none";
-          warEmpty.style.display = "block";
+          scoreBoard.style.display =
+            "none";
+
+          warEmpty.style.display =
+            "block";
         }
+
       } else {
-        warBadge.textContent = "No war data";
-        warBadge.className = "war-badge unknown";
-        scoreBoard.style.display = "none";
-        warEmpty.style.display = "block";
+        warBadge.textContent =
+          "No war data";
+
+        warBadge.className =
+          "war-badge unknown";
+
+        scoreBoard.style.display =
+          "none";
+
+        warEmpty.style.display =
+          "block";
       }
 
-      const attacksBody = document.getElementById("attacksBody");
-      const attacksEmpty = document.getElementById("attacksEmpty");
+      const attacksBody =
+        document.getElementById(
+          "attacksBody"
+        );
+
+      const attacksEmpty =
+        document.getElementById(
+          "attacksEmpty"
+        );
+
       attacksBody.innerHTML = "";
-      if (attacks && attacks.length) {
-        attacksEmpty.style.display = "none";
+
+      if (
+        attacks &&
+        attacks.length
+      ) {
+        attacksEmpty.style.display =
+          "none";
+
         attacks.forEach(a => {
-          const tr = document.createElement("tr");
+          const tr =
+            document.createElement("tr");
+
           tr.innerHTML = `
-        <td>${a.attacker_name || a.attacker_tag || "—"}</td>
-        <td>${a.defender_tag || "—"}</td>
-        <td class="num">${a.stars ?? 0} ★</td>
-        <td class="num">${a.destruction_percentage ?? 0}%</td>
-      `;
+            <td>${a.attacker_name || a.attacker_tag || "—"}</td>
+            <td>${a.defender_tag || "—"}</td>
+            <td class="num">${a.stars ?? 0} ★</td>
+            <td class="num">${a.destruction_percentage ?? 0}%</td>
+          `;
+
           attacksBody.appendChild(tr);
         });
       } else {
-        attacksEmpty.style.display = "block";
+        attacksEmpty.style.display =
+          "block";
       }
 
-      const membersBody = document.getElementById("membersBody");
-      const membersEmpty = document.getElementById("membersEmpty");
+      const membersBody =
+        document.getElementById(
+          "membersBody"
+        );
+
+      const membersEmpty =
+        document.getElementById(
+          "membersEmpty"
+        );
+
       membersBody.innerHTML = "";
-      if (members && members.length) {
-        membersEmpty.style.display = "none";
+
+      if (
+        members &&
+        members.length
+      ) {
+        membersEmpty.style.display =
+          "none";
+
         members.forEach(m => {
-          const tr = document.createElement("tr");
+          const tr =
+            document.createElement("tr");
+
           tr.innerHTML = `
-        <td>${m.clan_rank ?? "—"}</td>
-        <td>${m.name || "—"}</td>
-        <td><span class="role-badge ${roleClass(m.role)}">${roleLabel(m.role)}</span></td>
-        <td class="num">${m.town_hall_level ?? "—"}</td>
-        <td class="num">${m.trophies ?? 0}</td>
-        <td class="num">${m.donations ?? 0}</td>
-        <td class="num">${m.donations_received ?? 0}</td>
-      `;
+            <td>${m.clan_rank ?? "—"}</td>
+            <td>${m.name || "—"}</td>
+            <td>
+              <span class="role-badge ${roleClass(m.role)}">
+                ${roleLabel(m.role)}
+              </span>
+            </td>
+            <td class="num">${m.town_hall_level ?? "—"}</td>
+            <td class="num">${m.trophies ?? 0}</td>
+            <td class="num">${m.donations ?? 0}</td>
+            <td class="num">${m.donations_received ?? 0}</td>
+          `;
+
           membersBody.appendChild(tr);
         });
       } else {
-        membersEmpty.style.display = "block";
+        membersEmpty.style.display =
+          "block";
       }
 
-      const historyTimeline = document.getElementById("historyTimeline");
-      const historyEmpty = document.getElementById("historyEmpty");
+      const historyTimeline =
+        document.getElementById(
+          "historyTimeline"
+        );
+
+      const historyEmpty =
+        document.getElementById(
+          "historyEmpty"
+        );
+
       historyTimeline.innerHTML = "";
-      if (historyEvents && historyEvents.length) {
-        historyEmpty.style.display = "none";
+
+      if (
+        historyEvents &&
+        historyEvents.length
+      ) {
+        historyEmpty.style.display =
+          "none";
+
         historyEvents.forEach(ev => {
-          const item = document.createElement("div");
-          item.className = "timeline-item";
+          const item =
+            document.createElement("div");
+
+          item.className =
+            "timeline-item";
+
           item.innerHTML = `
-        <div class="timeline-date">${formatHistoryDate(ev.event_time)}</div>
-        <div class="timeline-title">${ev.title || "—"}</div>
-        ${ev.description ? `<div class="timeline-desc">${ev.description}</div>` : ""}
-      `;
-          historyTimeline.appendChild(item);
+            <div class="timeline-date">
+              ${formatHistoryDate(ev.event_time)}
+            </div>
+
+            <div class="timeline-title">
+              ${ev.title || "—"}
+            </div>
+
+            ${
+              ev.description
+                ? `
+                  <div class="timeline-desc">
+                    ${ev.description}
+                  </div>
+                `
+                : ""
+            }
+          `;
+
+          historyTimeline.appendChild(
+            item
+          );
         });
+
       } else {
-        historyEmpty.style.display = "block";
+        historyEmpty.style.display =
+          "block";
       }
+
+      renderCwl(cwl);
     }
 
     initTabs();
     loadDashboard();
-    setInterval(loadDashboard, 60000);
+
+    setInterval(
+      loadDashboard,
+      60000
+    );
   </script>
 </body>
 
