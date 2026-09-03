@@ -178,7 +178,7 @@
     .cwl-result-loss { color: var(--lose); font-weight: 700; }
     .cwl-result-tie { color: var(--text-dim); font-weight: 700; }
     .cwl-current { border-left: 3px solid var(--accent); }
-    .cwl-diagnostic { margin-top: 14px; padding: 10px 12px; border: 1px dashed var(--border); border-radius: 8px; color: var(--text-dim); font-size: 12px; display: none; }
+    .cwl-diagnostic { margin-top: 14px; padding: 10px 12px; border: 1px dashed var(--border); border-radius: 8px; color: var(--text-dim); font-size: 12px; display: none; white-space: pre-wrap; word-break: break-all; }
 
     .season-details {
       background: rgba(255, 255, 255, 0.02);
@@ -661,7 +661,8 @@
       } else { attacksEmpty.style.display = "block"; }
 
       if (cwl.diagnostic) {
-        diagnostic.textContent = cwl.diagnostic;
+        // Stringify the diagnostic object so it formats correctly instead of rendering [object Object]
+        diagnostic.textContent = typeof cwl.diagnostic === "object" ? JSON.stringify(cwl.diagnostic, null, 2) : cwl.diagnostic;
         diagnostic.style.display = "block";
       }
     }
